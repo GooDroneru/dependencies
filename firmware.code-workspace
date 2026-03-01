@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "../esc-bootloader/firmware"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"cmake.sourceDirectory": "${workspaceFolder:firmware}"
+	}
+}
