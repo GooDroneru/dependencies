@@ -14,5 +14,10 @@ SECTIONS
     .device_type ADDR(.eeprom) - 32 :       { KEEP(*(.device_type))           }
 }
 
+_flash_start_addr    = ORIGIN(FLASH);
+_flash_size          = LENGTH(FLASH);
 _firmware_start_addr = ADDR(.firmware_start);
 _eeprom_start_addr   = ADDR(.eeprom);
+
+/* Bootloader must fit entirely before firmware_start (0x1000 = 4KB) */
+ASSERT(_etext <= _firmware_start_addr, "ERROR: Bootloader exceeds 4KB - overflows into firmware area (firmware_start = 0x1000)")
