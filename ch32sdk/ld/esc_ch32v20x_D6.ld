@@ -9,8 +9,8 @@ SECTIONS
     /*.calibration     0x0000F000 : { KEEP(*(.calibration))     }
     .mcu_uid         0x0000F400 : { KEEP(*(.mcu_uid))         }
     .bootloader_info 0x0000F810 : { KEEP(*(.bootloader_info)) }*/
-    .firmware_start          0x00001000 :   { KEEP(*(.firmware_start))        }
-    .eeprom                  0x0000F000 :   { KEEP(*(.eeprom))                }
+    .firmware_start          0x08001000 :   { KEEP(*(.firmware_start))        }
+    .eeprom                  0x0800F000 :   { KEEP(*(.eeprom))                }
     .device_type ADDR(.eeprom) - 32 :       { KEEP(*(.device_type))           }
 }
 
