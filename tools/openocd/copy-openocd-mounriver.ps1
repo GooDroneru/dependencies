@@ -1,36 +1,30 @@
 #Requires -Version 5.1
 <#
 .SYNOPSIS
-    Copies WCH OpenOCD from MounRiver Studio to tools/openocd/wch-openocd.
+    Downloads WCH OpenOCD from the repository and extracts it to tools/openocd/wch-openocd.
 
 .DESCRIPTION
-    MounRiver Studio ships a patched WCH build of OpenOCD that supports
-    CH32V devices and includes wch-riscv.cfg. This script copies it to
-    the repository so it can be used independently of MounRiver.
+    Downloads the patched WCH build of OpenOCD that supports CH32V devices
+    from the dependencies repository and extracts it locally.
 
 .EXAMPLE
     .\copy-openocd-mounriver.ps1
-    .\copy-openocd-mounriver.ps1 -MounRiverPath "D:\MounRiver\MounRiver_Studio"
     .\copy-openocd-mounriver.ps1 -Force
 #>
 
 param(
-    [string]$MounRiverPath = "C:\MounRiver\MounRiver_Studio",
     [switch]$Force
 )
 
 try {
-    $OPENOCD_SRC = Join-Path $MounRiverPath "toolchain\OpenOCD"
-    $DEST        = Join-Path $PSScriptRoot "wch-openocd"
+    $ZIP_URL = "https://raw.githubusercontent.com/GooDroneru/dependencies/main/tools/openocd/wch-openocd.zip"
+    $ZIP_TMP = Join-Path $PSScriptRoot "wch-openocd.zip"
+    $DEST    = Join-Path $PSScriptRoot "wch-openocd"
 
-    Write-Host "WCH OpenOCD copy tool" -ForegroundColor Cyan
-    Write-Host "Source : $OPENOCD_SRC"
+    Write-Host "WCH OpenOCD download tool" -ForegroundColor Cyan
+    Write-Host "Source : $ZIP_URL"
     Write-Host "Target : $DEST"
     Write-Host ""
-
-    if (-not (Test-Path $OPENOCD_SRC)) {
-        throw "MounRiver OpenOCD not found at: $OPENOCD_SRC`nUse -MounRiverPath to specify the MounRiver Studio installation directory."
-    }
 
     if ((Test-Path $DEST) -and -not $Force) {
         Write-Host "Already exists at:" -ForegroundColor Green
@@ -39,9 +33,21 @@ try {
         return
     }
 
-    Write-Host "Copying OpenOCD..."
-    Copy-Item -Path $OPENOCD_SRC -Destination $DEST -Recurse -Force
-    Write-Host "Copy complete." -ForegroundColor Green
+    Write-Host "Downloading wch-openocd.zip..."
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    Invoke-WebRequest -Uri $ZIP_URL -OutFile $ZIP_TMP -UseBasicParsing
+    Write-Host "Download complete." -ForegroundColor Green
+
+    if (Test-Path $DEST) {
+        Write-Host "Removing existing directory..."
+        Remove-Item -Path $DEST -Recurse -Force
+    }
+
+    Write-Host "Extracting..."
+    Expand-Archive -Path $ZIP_TMP -DestinationPath $PSScriptRoot -Force
+    Write-Host "Extraction complete." -ForegroundColor Green
+
+    Remove-Item -Path $ZIP_TMP -Force
 
     # --- Summary -------------------------------------------------------------
     $openocdExe = Join-Path $DEST "bin\openocd.exe"
@@ -54,11 +60,11 @@ try {
         Write-Host "  OpenOCD : $version"
         Write-Host "  Bin     : $(Join-Path $DEST 'bin')"
     } else {
-        Write-Warning "openocd.exe not found at expected path - copy may be incomplete."
+        Write-Warning "openocd.exe not found at expected path - archive layout may differ."
     }
 
     if (-not (Test-Path $cfgFile)) {
-        Write-Warning "wch-riscv.cfg not found in bin\ - check MounRiver installation."
+        Write-Warning "wch-riscv.cfg not found in bin\ - check archive contents."
     }
 
 } catch {
