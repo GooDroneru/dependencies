@@ -27,8 +27,14 @@ set(K1921VK035_ESC_LD_SCRIPT
     "${CMAKE_CURRENT_LIST_DIR}/../../niietsdk/Device/NIIET/K1921VK035/Source/GCC/esc_K1921VK035.ld"
     CACHE FILEPATH "ESC linker script for K1921VK035"
 )
-message(STATUS "K1921VK035 linker script    : ${K1921VK035_LD_SCRIPT}")
-message(STATUS "K1921VK035 ESC linker script: ${K1921VK035_ESC_LD_SCRIPT}")
+# ESC firmware application linker script: MFLASH starts at 0x00001000 (after 4 KB bootloader).
+set(K1921VK035_ESC_APP_LD_SCRIPT
+    "${CMAKE_CURRENT_LIST_DIR}/../../niietsdk/Device/NIIET/K1921VK035/Source/GCC/esc_K1921VK035_app.ld"
+    CACHE FILEPATH "ESC firmware application linker script for K1921VK035"
+)
+message(STATUS "K1921VK035 linker script        : ${K1921VK035_LD_SCRIPT}")
+message(STATUS "K1921VK035 ESC linker script    : ${K1921VK035_ESC_LD_SCRIPT}")
+message(STATUS "K1921VK035 ESC app ld script    : ${K1921VK035_ESC_APP_LD_SCRIPT}")
 
 # --------------------------------------------------------------------------
 # INTERFACE library — attach to any executable to get MCU-specific flags
