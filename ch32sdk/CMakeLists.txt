@@ -25,11 +25,17 @@ target_sources(${PROJECT_NAME}
         startup/startup_ch32v20x_${CH32_DEVICE}.S
 )
 
+if(NOT CH32_OVERRIDE_SYSTEM)
+    target_sources(${PROJECT_NAME}
+        INTERFACE
+            core/system_ch32v20x.c
+    )
+endif()
+
 target_sources(${PROJECT_NAME}
     INTERFACE
         core/core_riscv.c
         core/core_riscv.h
-        core/system_ch32v20x.c
         core/system_ch32v20x.h
         debug/debug.c
         debug/debug.h

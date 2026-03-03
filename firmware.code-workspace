@@ -8,6 +8,7 @@
 		}
 	],
 	"settings": {
-		"cmake.sourceDirectory": "${workspaceFolder:firmware}"
+		"cmake.sourceDirectory": "${workspaceFolder:firmware}",
+		"powershell.cwd": "firmware"
 	}
 }
