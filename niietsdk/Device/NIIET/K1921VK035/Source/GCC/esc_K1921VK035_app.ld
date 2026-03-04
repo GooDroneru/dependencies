@@ -152,7 +152,7 @@ SECTIONS
 
     /* ESC fixed-address sections */
     .eeprom                         0x0000F000 : { KEEP(*(.eeprom))            }
-    .device_type ADDR(.eeprom) - 32            : { KEEP(*(.device_type))       }
+    .device_type ADDR(.eeprom) - 32            : { __device_info_start = .; KEEP(*(.device_type))       }
     .calibration_value              0x0000F800 : { KEEP(*(.calibration_value)) }
     .mcu_uid                        0x0000FC00 : { KEEP(*(.mcu_uid))           }
 }
