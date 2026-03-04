@@ -14,7 +14,6 @@
  *   _eeprom_start_addr  = ADDR(.eeprom)   = 0x0800F000
  *   _firmware_start_addr = ADDR(.firmware_start) = 0x08001000
  */
-
 MEMORY
 {
     FLASH (rx)  : ORIGIN = 0x00001000, LENGTH = 60K
@@ -159,7 +158,7 @@ SECTIONS
 
     /* ESC fixed-address sections */
     .firmware_start          0x08001000 :               { KEEP(*(.firmware_start))  }
-    .eeprom                  0x0800F000 :               { KEEP(*(.eeprom))           }
+    .eeprom                  0x0000F000 :               { KEEP(*(.eeprom))           }
     .device_type  ADDR(.eeprom) - 32   :               { __device_info_start = .;   KEEP(*(.device_type));   }
     .firmware_info ADDR(.device_type) - 32 :           { __firmware_info_start = .; KEEP(*(.firmware_info)); }
 }

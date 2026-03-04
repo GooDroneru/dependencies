@@ -8,9 +8,6 @@ ENTRY( _start )
 __stack_size = DEFINED(__stack_size) ? __stack_size : 2048;
 PROVIDE( _stack_size = __stack_size );
 
-_flash_start_addr = 0x08000000;
-_flash_size        = LENGTH(FLASH);
-
 SECTIONS
 {
 
