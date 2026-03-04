@@ -69,7 +69,7 @@ dkms.conf
 
 # Tools
 tools/arm
-tools/risc
+tools/risc/*/
 tools/openocd/wch-openocd
 tools/openocd/vk035/xpack-openocd-k1921vk-0.12.0-k1921vk
 tools/openocd/vk035/scripts

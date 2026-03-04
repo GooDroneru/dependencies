@@ -1,11 +1,11 @@
 #Requires -Version 5.1
 <#
 .SYNOPSIS
-    Downloads and installs xPack GNU RISC-V Embedded GCC v15.2.0-1 for Windows x64.
+    Installs riscv-none-embed GCC v1.4 (8.2.0) from a local zip archive.
 
 .DESCRIPTION
-    Downloads the toolchain from GitHub releases and extracts it to the
-    same directory as this script (tools/risc/).
+    Extracts riscv-none-embed-gcc-v1.4.zip (located in the same folder as
+    this script) into tools/risc/riscv-none-embed-gcc-v1.4/.
 
 .EXAMPLE
     .\install-toolchain.ps1
@@ -21,18 +21,17 @@ $ErrorActionPreference = "Stop"
 
 try {
     # --- Configuration -------------------------------------------------------
-    $VERSION      = "15.2.0-1"
-    $ASSET        = "xpack-riscv-none-elf-gcc-$VERSION-win32-x64.zip"
-    $DOWNLOAD_URL = "https://github.com/xpack-dev-tools/riscv-none-elf-gcc-xpack/releases/download/v$VERSION/$ASSET"
-    $SHA_URL      = "$DOWNLOAD_URL.sha"
+    $ARCHIVE_NAME  = "riscv-none-embed-gcc-v1.4.zip"
+    $TOOLCHAIN_NAME = "riscv-none-embed-gcc-v1.4"
 
     $INSTALL_DIR   = $PSScriptRoot
-    $TOOLCHAIN_DIR = Join-Path $INSTALL_DIR "xpack-riscv-none-elf-gcc-$VERSION"
+    $ARCHIVE       = Join-Path $INSTALL_DIR $ARCHIVE_NAME
+    $TOOLCHAIN_DIR = Join-Path $INSTALL_DIR $TOOLCHAIN_NAME
     # -------------------------------------------------------------------------
 
-    Write-Host "xPack RISC-V GCC installer" -ForegroundColor Cyan
-    Write-Host "Version  : $VERSION"
-    Write-Host "Target   : $INSTALL_DIR"
+    Write-Host "riscv-none-embed GCC installer" -ForegroundColor Cyan
+    Write-Host "Archive  : $ARCHIVE"
+    Write-Host "Target   : $TOOLCHAIN_DIR"
     Write-Host ""
 
     if ((Test-Path $TOOLCHAIN_DIR) -and -not $Force) {
@@ -42,44 +41,18 @@ try {
         return
     }
 
-    $ARCHIVE = Join-Path $env:TEMP $ASSET
-
-    # --- Download ------------------------------------------------------------
-    Write-Host "Downloading $ASSET ..."
-    $ProgressPreference = "SilentlyContinue"
-    Invoke-WebRequest -Uri $DOWNLOAD_URL -OutFile $ARCHIVE -UseBasicParsing
-    $ProgressPreference = "Continue"
-    Write-Host "Download complete." -ForegroundColor Green
-
-    # --- Verify SHA-256 ------------------------------------------------------
-    Write-Host "Verifying checksum ..."
-    try {
-        $shaLine      = [System.Text.Encoding]::UTF8.GetString(
-            (Invoke-WebRequest -Uri $SHA_URL -UseBasicParsing).Content
-        ).Trim()
-        $expectedHash = ($shaLine -split '\s+')[0].ToUpper()
-        $actualHash   = (Get-FileHash -Path $ARCHIVE -Algorithm SHA256).Hash.ToUpper()
-
-        if ($actualHash -ne $expectedHash) {
-            Remove-Item $ARCHIVE -Force
-            throw "Checksum mismatch!`n  Expected : $expectedHash`n  Actual   : $actualHash"
-        }
-        Write-Host "Checksum OK." -ForegroundColor Green
-    } catch {
-        Write-Warning "Could not verify checksum: $_"
+    # --- Check archive exists ------------------------------------------------
+    if (-not (Test-Path $ARCHIVE)) {
+        throw "Archive not found: $ARCHIVE`nPlace $ARCHIVE_NAME next to this script."
     }
 
     # --- Extract -------------------------------------------------------------
-    Write-Host "Extracting to $INSTALL_DIR ..."
+    Write-Host "Extracting $ARCHIVE_NAME to $INSTALL_DIR ..."
     Expand-Archive -Path $ARCHIVE -DestinationPath $INSTALL_DIR -Force
     Write-Host "Extraction complete." -ForegroundColor Green
 
-    # --- Cleanup -------------------------------------------------------------
-    Remove-Item $ARCHIVE -Force
-    Write-Host "Temporary archive removed."
-
     # --- Summary -------------------------------------------------------------
-    $gccExe = Join-Path $TOOLCHAIN_DIR "bin\riscv-none-elf-gcc.exe"
+    $gccExe = Join-Path $TOOLCHAIN_DIR "bin\riscv-none-embed-gcc.exe"
     if (Test-Path $gccExe) {
         $gccVersion = (& $gccExe --version 2>&1)[0]
         Write-Host ""
@@ -87,7 +60,7 @@ try {
         Write-Host "  GCC : $gccVersion"
         Write-Host "  Bin : $(Join-Path $TOOLCHAIN_DIR 'bin')"
     } else {
-        Write-Warning "Installation may be incomplete - gcc.exe not found at expected path."
+        Write-Warning "Installation may be incomplete - riscv-none-embed-gcc.exe not found at expected path."
     }
 
 } catch {

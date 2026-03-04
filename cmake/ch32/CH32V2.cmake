@@ -1,6 +1,6 @@
 include(${CMAKE_CURRENT_LIST_DIR}/../toolchain/riscv-none-embed.cmake)
 
-set(MCU_ARCH rv32imac_zicsr)
+set(MCU_ARCH rv32imac)
 set(MCU_INTEGER_ABI ilp32)
 
 # Select linker script based on CH32_DEVICE (must be set before including this file)
