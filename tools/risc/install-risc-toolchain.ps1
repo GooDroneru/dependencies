@@ -46,13 +46,25 @@ if ($DownloadUrl -ne "") {
         }
     }
 
+    # Try downloading each candidate in turn until one succeeds
     $downloadUrl = $null
+    $localAttempt = $null
     foreach ($u in $candidates) {
+        $tryName = [System.IO.Path]::GetFileName($u)
+        $tryFile = Join-Path $tmp $tryName
+        Write-Host "Attempting to download candidate: $u"
         try {
-            $resp = Invoke-WebRequest -Uri $u -Method Head -UseBasicParsing -TimeoutSec 10 -ErrorAction Stop
-            if ($resp.StatusCode -ge 200 -and $resp.StatusCode -lt 400) { $downloadUrl = $u; break }
+            Invoke-WebRequest -Uri $u -OutFile $tryFile -UseBasicParsing -TimeoutSec 30 -ErrorAction Stop
+            # downloaded successfully
+            Write-Host "Downloaded candidate to $tryFile"
+            $downloadUrl = $u
+            $assetName = $tryName
+            $localAttempt = $tryFile
+            break
         } catch {
-            # try next
+            Write-Host "Candidate failed: $u ($($_.Exception.Message))"
+            if (Test-Path $tryFile) { Remove-Item -Force $tryFile }
+            continue
         }
     }
 
@@ -61,9 +73,7 @@ if ($DownloadUrl -ne "") {
         exit 3
     }
 
-    $assetName = [System.IO.Path]::GetFileName($downloadUrl)
     Write-Host "Selected SiFive asset: $assetName"
-    Write-Host "Downloading $downloadUrl"
 }
 
 
@@ -72,11 +82,22 @@ if ($DownloadUrl -ne "") {
 
 $tmp = Join-Path $env:TEMP ([System.IO.Path]::GetRandomFileName())
 New-Item -ItemType Directory -Force -Path $tmp | Out-Null
-$localFile = Join-Path $tmp $assetName
-
-Invoke-WebRequest -Uri $downloadUrl -OutFile $localFile -UseBasicParsing
-
-Write-Host "Downloaded to $localFile"
+$localFile = $null
+if ($localAttempt -ne $null -and (Test-Path $localAttempt)) {
+    $localFile = $localAttempt
+    Write-Host "Using previously downloaded file: $localFile"
+} else {
+    # No predownload; download now
+    $localFile = Join-Path $tmp $assetName
+    Write-Host "Downloading $downloadUrl to $localFile"
+    try {
+        Invoke-WebRequest -Uri $downloadUrl -OutFile $localFile -UseBasicParsing -TimeoutSec 60 -ErrorAction Stop
+        Write-Host "Downloaded to $localFile"
+    } catch {
+        Write-Error "Failed to download $downloadUrl : $($_.Exception.Message)"
+        exit 4
+    }
+}
 
 # Ensure target directory
 $installRoot = Join-Path $TargetDir "riscv-toolchain"
