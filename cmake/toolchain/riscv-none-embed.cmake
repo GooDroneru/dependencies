@@ -8,11 +8,21 @@ set(CMAKE_LIBRARY_ARCHITECTURE riscv-none-embed)
 
 set(_EMBED_VERSION "v1.4")
 
-# Allow overriding the toolchain location via environment variable `RISCV_TOOLCHAIN_DIR`.
-if(DEFINED ENV{RISCV_TOOLCHAIN_DIR} AND NOT "" STREQUAL "$ENV{RISCV_TOOLCHAIN_DIR}")
+
+# Always use RISCV_TOOLCHAIN_DIR if set, no fallback!
+if(DEFINED ENV{RISCV_TOOLCHAIN_DIR} AND NOT "$ENV{RISCV_TOOLCHAIN_DIR}" STREQUAL "")
     set(_EMBED_BIN_DIR "$ENV{RISCV_TOOLCHAIN_DIR}/bin")
+    message(STATUS "Using RISCV_TOOLCHAIN_DIR from environment: $_EMBED_BIN_DIR")
 else()
-    set(_EMBED_BIN_DIR "${CMAKE_CURRENT_LIST_DIR}/../../tools/risc/riscv-none-embed-gcc-${_EMBED_VERSION}/bin")
+    # Fallback: xPack or default
+    file(GLOB _XP_PACKS RELATIVE "${CMAKE_CURRENT_LIST_DIR}/../../tools/risc" "${CMAKE_CURRENT_LIST_DIR}/../../tools/risc/xpack-riscv-none-elf-gcc-*")
+    if(_XP_PACKS)
+        list(SORT _XP_PACKS)
+        list(GET _XP_PACKS 0 _CHOICE)
+        set(_EMBED_BIN_DIR "${CMAKE_CURRENT_LIST_DIR}/../../tools/risc/${_CHOICE}/bin")
+    else()
+        set(_EMBED_BIN_DIR "${CMAKE_CURRENT_LIST_DIR}/../../tools/risc/riscv-none-embed-gcc-${_EMBED_VERSION}/bin")
+    endif()
 endif()
 
 if(WIN32)
