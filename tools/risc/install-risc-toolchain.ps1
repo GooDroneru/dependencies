@@ -19,14 +19,51 @@ function Get-Platform() {
 $plat = Get-Platform
 Write-Host "Detected platform: $plat"
 
-$api = "https://api.github.com/repos/openwch/risc-none-embed-gcc/releases"
-if ($Tag -eq "latest") { $url = "$api/latest" } else { $url = "$api/tags/$Tag" }
+Write-Host "Selecting SiFive freedom-tools v2019.05.0 prebuilt assets for platform: $plat"
 
-Write-Host "Querying $url"
-try {
-    $rel = Invoke-RestMethod -Uri $url -UseBasicParsing
-} catch {
-    Write-Error "Failed to query GitHub API: $_"; exit 2
+# If user provided an explicit DownloadUrl, use it. Otherwise pick a SiFive prebuilt URL based on platform.
+if ($DownloadUrl -ne "") {
+    $downloadUrl = $DownloadUrl
+    if ($AssetName -ne "") { $assetName = $AssetName } else { $assetName = [System.IO.Path]::GetFileName($downloadUrl) }
+    Write-Host "Using explicit DownloadUrl: $downloadUrl"
+} else {
+    Write-Host "No DownloadUrl provided — selecting SiFive 8.2 prebuilt archive"
+    switch ($plat) {
+        'linux' {
+            $candidates = @(
+                'https://static.dev.sifive.com/dev-tools/riscv64-unknown-elf-gcc-8.2.0-2019.05.3-x86_64-linux-centos6.tar.gz',
+                'https://static.dev.sifive.com/dev-tools/riscv64-unknown-elf-gcc-8.2.0-2019.05.3-x86_64-linux.tar.gz'
+            )
+        }
+        'darwin' {
+            $candidates = @('https://static.dev.sifive.com/dev-tools/riscv64-unknown-elf-gcc-8.2.0-2019.05.3-x86_64-apple-darwin.tar.gz')
+        }
+        'windows' {
+            $candidates = @('https://static.dev.sifive.com/dev-tools/riscv64-unknown-elf-gcc-8.2.0-2019.05.3-x86_64-w64-mingw32.tar.gz')
+        }
+        default {
+            $candidates = @('https://static.dev.sifive.com/dev-tools/riscv64-unknown-elf-gcc-8.2.0-2019.05.3-x86_64-linux-centos6.tar.gz')
+        }
+    }
+
+    $downloadUrl = $null
+    foreach ($u in $candidates) {
+        try {
+            $resp = Invoke-WebRequest -Uri $u -Method Head -UseBasicParsing -TimeoutSec 10 -ErrorAction Stop
+            if ($resp.StatusCode -ge 200 -and $resp.StatusCode -lt 400) { $downloadUrl = $u; break }
+        } catch {
+            # try next
+        }
+    }
+
+    if (-not $downloadUrl) {
+        Write-Error "No reachable SiFive prebuilt archive found for platform '$plat'. Provide -DownloadUrl to use a specific archive."
+        exit 3
+    }
+
+    $assetName = [System.IO.Path]::GetFileName($downloadUrl)
+    Write-Host "Selected SiFive asset: $assetName"
+    Write-Host "Downloading $downloadUrl"
 }
 
 
@@ -87,7 +124,7 @@ if ($DownloadUrl -ne "") {
 
 $tmp = Join-Path $env:TEMP ([System.IO.Path]::GetRandomFileName())
 New-Item -ItemType Directory -Force -Path $tmp | Out-Null
-$localFile = Join-Path $tmp $asset.name
+$localFile = Join-Path $tmp $assetName
 
 Invoke-WebRequest -Uri $downloadUrl -OutFile $localFile -UseBasicParsing
 
@@ -97,11 +134,38 @@ Write-Host "Downloaded to $localFile"
 $installRoot = Join-Path $TargetDir "riscv-toolchain"
 if (-not (Test-Path $installRoot)) { New-Item -ItemType Directory -Force -Path $installRoot | Out-Null }
 
-# Extract using 7z
-$seven = "C:\Program Files\7-Zip\7z.exe"
-if (-not (Test-Path $seven)) { $seven = "7z" }
+Write-Host "Extracting $localFile to $installRoot"
 
-& $seven x $localFile -o$installRoot -y
+# Choose extractor by archive extension
+if ($localFile -match '\.tar\.gz$' -or $localFile -match '\.tgz$') {
+    if ($IsWindows) {
+        # On Windows, try tar (available on modern runners) or 7z as fallback
+        try {
+            tar -xzf $localFile -C $installRoot
+        } catch {
+            $seven = "C:\Program Files\7-Zip\7z.exe"
+            if (-not (Test-Path $seven)) { $seven = "7z" }
+            & $seven x $localFile -o$installRoot -y
+        }
+    } else {
+        tar -xzf $localFile -C $installRoot
+    }
+} elseif ($localFile -match '\.tar\.xz$') {
+    if ($IsWindows) {
+        try { tar -xJf $localFile -C $installRoot } catch { $seven = "C:\Program Files\7-Zip\7z.exe"; if (-not (Test-Path $seven)) { $seven = "7z" }; & $seven x $localFile -o$installRoot -y }
+    } else {
+        tar -xJf $localFile -C $installRoot
+    }
+} elseif ($localFile -match '\.zip$' -or $localFile -match '\.7z$') {
+    $seven = "C:\Program Files\7-Zip\7z.exe"
+    if (-not (Test-Path $seven)) { $seven = "7z" }
+    & $seven x $localFile -o$installRoot -y
+} else {
+    # Unknown extension — attempt 7z
+    $seven = "C:\Program Files\7-Zip\7z.exe"
+    if (-not (Test-Path $seven)) { $seven = "7z" }
+    & $seven x $localFile -o$installRoot -y
+}
 
 Write-Host "Extracted to $installRoot"
 
