@@ -86,10 +86,11 @@ if(NOT EXISTS "${_GCC_EXE}")
         if(NOT EXISTS "${_GCC_EXE}")
         message(FATAL_ERROR
             "riscv-none-embed GCC ${_EMBED_VERSION} not found.\n"
-            "Expected: ${_GCC_EXE}\n"
-            "Or set environment variable RISCV_TOOLCHAIN_DIR to the toolchain root.\n"
-            "Copy MounRiver toolchain to:\n"
-            "  dependencies/tools/risc/riscv-none-embed-gcc-${_EMBED_VERSION}/")
+            "Expected: ${_GCC_EXE}\n\n"
+            "Options to fix:\n"
+            " - Install a riscv toolchain and set the environment variable RISCV_TOOLCHAIN_DIR to the toolchain root.\n"
+            " - Download a prebuilt toolchain (example: https://github.com/openwch/risc-none-embed-gcc) and place its root under dependencies/tools/risc/, or set RISCV_TOOLCHAIN_DIR to its path.\n"
+            " - Alternatively ensure a suitable riscv compiler is available on PATH.\n")
         endif()
     endif()
 endif()
