@@ -30,12 +30,24 @@ if(NOT EXISTS "${_GCC_EXE}")
         set(_GCC_EXE "${_EMBED_BIN_DIR}/riscv-none-embed-gcc")
         message(STATUS "Found riscv-none-embed-gcc on PATH: ${_GCC_EXE}")
     else()
+        # Try xPack toolchain path if XPACK_RISCV_VERSION env var is set (CI cache)
+        if(DEFINED ENV{XPACK_RISCV_VERSION} AND NOT "" STREQUAL "$ENV{XPACK_RISCV_VERSION}")
+            set(_XPACK_DIR "${CMAKE_CURRENT_LIST_DIR}/../../tools/risc/xpack-riscv-none-elf-gcc-$ENV{XPACK_RISCV_VERSION}")
+            if(EXISTS "${_XPACK_DIR}/bin/riscv-none-embed-gcc")
+                set(_EMBED_BIN_DIR "${_XPACK_DIR}/bin")
+                set(_GCC_EXE "${_EMBED_BIN_DIR}/riscv-none-embed-gcc")
+                message(STATUS "Found xpack riscv toolchain: ${_GCC_EXE}")
+            endif()
+        endif()
+
+        if(NOT EXISTS "${_GCC_EXE}")
         message(FATAL_ERROR
             "riscv-none-embed GCC ${_EMBED_VERSION} not found.\n"
             "Expected: ${_GCC_EXE}\n"
             "Or set environment variable RISCV_TOOLCHAIN_DIR to the toolchain root.\n"
             "Copy MounRiver toolchain to:\n"
             "  dependencies/tools/risc/riscv-none-embed-gcc-${_EMBED_VERSION}/")
+        endif()
     endif()
 endif()
 
