@@ -13,7 +13,7 @@ SECTIONS
     .device_type             ADDR(.eeprom) - 32 :   { __device_info_start = .;  KEEP(*(.device_type)); }
 }
 
-_flash_size          = LENGTH(FLASH);
+/*_flash_size          = LENGTH(FLASH);*/
 _flash_rw_offset     = ADDR(.flash_rw_offset);
 _app_start_addr      = ADDR(.app_start);
 _eeprom_start_addr   = ADDR(.eeprom);
