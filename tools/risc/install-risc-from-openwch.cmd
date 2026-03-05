@@ -1,9 +1,9 @@
 @echo off
-rem Installer launcher for Windows — runs PowerShell script and keeps window open on errors
+rem Windows launcher: runs PowerShell installer and keeps window open on errors
 setlocal
 set SCRIPT_DIR=%~dp0
 echo Running PowerShell installer...
-powershell -NoProfile -ExecutionPolicy Bypass -File "%SCRIPT_DIR%install-risc-toolchain.ps1" %*
+powershell -NoProfile -ExecutionPolicy Bypass -File "%SCRIPT_DIR%install-risc-from-openwch.ps1" %*
 set RC=%ERRORLEVEL%
 if %RC% NEQ 0 (
 	echo.

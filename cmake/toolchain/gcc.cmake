@@ -1,5 +1,17 @@
-set(TOOLCHAIN_PREFIX "${CMAKE_LIBRARY_ARCHITECTURE}-")
 set(TOOLCHAIN_BIN_PATH "${TOOLCHAIN_DIR}/bin")
+# Derive the toolchain binary prefix from the detected compiler if available
+# e.g. if _GCC_EXE is /.../riscv64-unknown-elf-gcc then prefix -> "riscv64-unknown-elf-"
+if(DEFINED _GCC_EXE)
+    get_filename_component(_gcc_name "${_GCC_EXE}" NAME)
+    string(REGEX REPLACE "gcc(\\.exe)?$" "" _prefix "${_gcc_name}")
+    if(NOT _prefix MATCHES "-$")
+        set(_prefix "${_prefix}-")
+    endif()
+    set(TOOLCHAIN_PREFIX "${_prefix}")
+else()
+    set(TOOLCHAIN_PREFIX "${CMAKE_LIBRARY_ARCHITECTURE}-")
+endif()
+
 set(TOOLCHAIN_INC_PATH "${TOOLCHAIN_DIR}/${CMAKE_LIBRARY_ARCHITECTURE}/include")
 set(TOOLCHAIN_LIB_PATH "${TOOLCHAIN_DIR}/${CMAKE_LIBRARY_ARCHITECTURE}/lib")
 set(TOOLCHAIN_SYSROOT  "${TOOLCHAIN_DIR}/${CMAKE_LIBRARY_ARCHITECTURE}")
