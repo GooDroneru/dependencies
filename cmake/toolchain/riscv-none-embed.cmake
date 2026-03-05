@@ -67,4 +67,13 @@ endif()
 get_filename_component(TOOLCHAIN_DIR "${_EMBED_BIN_DIR}/.." ABSOLUTE)
 message(STATUS "Found riscv-none-embed toolchain: ${TOOLCHAIN_DIR}")
 
+# Adjust library architecture prefix to match detected toolchain binaries
+if(_GCC_EXE MATCHES "riscv-none-elf")
+    set(CMAKE_LIBRARY_ARCHITECTURE "riscv-none-elf")
+    message(STATUS "Using CMAKE_LIBRARY_ARCHITECTURE=${CMAKE_LIBRARY_ARCHITECTURE}")
+else()
+    set(CMAKE_LIBRARY_ARCHITECTURE "riscv-none-embed")
+    message(STATUS "Using CMAKE_LIBRARY_ARCHITECTURE=${CMAKE_LIBRARY_ARCHITECTURE}")
+endif()
+
 include(${CMAKE_CURRENT_LIST_DIR}/gcc.cmake)
