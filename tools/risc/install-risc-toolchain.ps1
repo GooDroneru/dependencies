@@ -10,9 +10,16 @@ Write-Host "Install RISC-V toolchain script"
 
 function Get-Platform() {
     if ($Platform -ne "auto") { return $Platform }
-    if ($IsWindows) { return "windows" }
-    $uname = (uname -s) 2>$null
-    if ($uname -match "Linux") { return "linux" }
+    try {
+        if ([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([System.Runtime.InteropServices.OSPlatform]::Windows)) { return "windows" }
+        if ([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([System.Runtime.InteropServices.OSPlatform]::OSX)) { return "darwin" }
+        if ([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([System.Runtime.InteropServices.OSPlatform]::Linux)) { return "linux" }
+    } catch {
+        # Fallback to older uname heuristic
+        $uname = (uname -s) 2>$null
+        if ($uname -match "Linux") { return "linux" }
+        if ($uname -match "Darwin") { return "darwin" }
+    }
     return "linux"
 }
 
@@ -49,7 +56,14 @@ if ($DownloadUrl -ne "") {
     # Try downloading each candidate in turn until one succeeds
     $downloadUrl = $null
     $localAttempt = $null
+    # prepare temporary download directory before attempting candidates
+    $tmp = Join-Path $env:TEMP ([System.IO.Path]::GetRandomFileName())
+    New-Item -ItemType Directory -Force -Path $tmp | Out-Null
+    if (-not $candidates -or $candidates.Count -eq 0) {
+        Write-Host "No candidate URLs available for platform '$plat'"
+    }
     foreach ($u in $candidates) {
+        if (-not $u) { continue }
         $tryName = [System.IO.Path]::GetFileName($u)
         $tryFile = Join-Path $tmp $tryName
         Write-Host "Attempting to download candidate: $u"
@@ -73,7 +87,7 @@ if ($DownloadUrl -ne "") {
         exit 3
     }
 
-    Write-Host "Selected SiFive asset: $assetName"
+    Write-Host "Selected SiFive asset: $assetName ($downloadUrl)"
 }
 
 
