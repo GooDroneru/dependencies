@@ -16,7 +16,11 @@ set(TOOLCHAIN_INC_PATH "${TOOLCHAIN_DIR}/${CMAKE_LIBRARY_ARCHITECTURE}/include")
 set(TOOLCHAIN_LIB_PATH "${TOOLCHAIN_DIR}/${CMAKE_LIBRARY_ARCHITECTURE}/lib")
 set(TOOLCHAIN_SYSROOT  "${TOOLCHAIN_DIR}/${CMAKE_LIBRARY_ARCHITECTURE}")
 
+# On Linux with Windows .exe binaries (Wine mode): use .exe extension
 if(WIN32)
+    set(TOOLCHAIN_EXT ".exe")
+elseif(EXISTS "${TOOLCHAIN_BIN_PATH}/${TOOLCHAIN_PREFIX}gcc.exe" AND
+       NOT EXISTS "${TOOLCHAIN_BIN_PATH}/${TOOLCHAIN_PREFIX}gcc")
     set(TOOLCHAIN_EXT ".exe")
 else()
     set(TOOLCHAIN_EXT "")
@@ -58,7 +62,7 @@ function(gcc_print_target_size TargetName)
     add_custom_command(
         TARGET ${TargetName}
         POST_BUILD
-	    COMMAND ${CMAKE_COMMAND} -E echo "Invoking: GCC Print Size"
+        COMMAND ${CMAKE_COMMAND} -E echo "Invoking: GCC Print Size"
         COMMAND ${CMAKE_SIZE} ${TargetName}${CMAKE_EXECUTABLE_SUFFIX_C}
     )
 endfunction()
@@ -99,4 +103,3 @@ function(gcc_add_linker_script TARGET VISIBILITY SCRIPT_PATH)
     get_filename_component(SCRIPT_PATH "${SCRIPT_PATH}" ABSOLUTE)
     target_link_options(${TARGET} ${VISIBILITY} -T "${SCRIPT_PATH}")
 endfunction()
-
