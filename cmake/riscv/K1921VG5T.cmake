@@ -1,4 +1,4 @@
-# K1921VG5T — RISC-V 32IMAC
+# K1921VG5T — RISC-V 32IMFD_Zicsr_Zifencei (Syntacore SCR4)
 # Usage in project CMakeLists.txt (before project()):
 #   set(CMAKE_DIR path/to/dependencies/cmake)
 #   include(${CMAKE_DIR}/riscv/K1921VG5T.cmake)
@@ -10,8 +10,10 @@
 
 include(${CMAKE_CURRENT_LIST_DIR}/../toolchain/riscv-none-embed.cmake)
 
-set(MCU_ARCH   rv32imac)
-set(MCU_ABI    ilp32)
+# ISA: rv32i base + m f d _zicsr _zifencei + c (compressed)
+set(MCU_ARCH   rv32imfd_zicsr_zifencei)
+# ABI: ilp32 + d (double floating point)
+set(MCU_ABI    ilp32d)
 
 # Default linker script shipped with niietsdk. Projects can override this variable.
 set(K1921VG5T_LD_SCRIPT
@@ -31,12 +33,20 @@ set(_K1921VG5T_ARCH_FLAGS
     -mabi=${MCU_ABI}
 )
 
+# Platform include directories (relative to project root where this is included)
+# These paths assume the project is structured like the k1921vg5t_sdk reference
+target_include_directories(K1921VG5T INTERFACE
+    "${CMAKE_CURRENT_LIST_DIR}/../../niietsdk/vg5t/Device/K1921VG5T/include"
+)
+
 target_compile_options(K1921VG5T INTERFACE
     ${_K1921VG5T_ARCH_FLAGS}
     -ffunction-sections
     -fdata-sections
     -fsigned-char
     -fmessage-length=0
+    -fno-builtin
+    -fno-common
     # C++ runtime overhead reduction
     $<$<COMPILE_LANGUAGE:CXX>:
         -fno-exceptions
@@ -49,17 +59,20 @@ target_compile_options(K1921VG5T INTERFACE
 
 target_link_options(K1921VG5T INTERFACE
     ${_K1921VG5T_ARCH_FLAGS}
-    LINKER:--gc-sections
-    LINKER:--print-memory-usage
+    -Wl,--gc-sections
+    -Wl,--print-memory-usage
     -nostartfiles
+    -nostdlib
+    -lgcc
+    -lc
 )
 
 target_compile_definitions(K1921VG5T INTERFACE
     K1921VG5T
     "__weak=__attribute__((weak))"
     "__packed=__attribute__((__packed__))"
-    # startup_k1921vg5t.S calls `bl __START` which defaults to `_start` (newlib
-    # C-runtime entry). Without newlib's crt0, `_start` is missing. Override it
-    # to jump straight to main() for bare-metal builds.
-    __START=main
+    # Required by system_k1921vg5t.c for clock initialization
+    HSECLK_VAL=16000000
+    SYSCLK_PLL
+    CKO_HSE
 )
