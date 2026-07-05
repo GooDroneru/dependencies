@@ -438,18 +438,18 @@ extern "C" {
   * @{
   */
 
-#define CAN_Msg_Flag_RxEnd CANMSG_MSG_MOSTAT_RXPND_Msk     /*!< Флаг окончания приема сообщения */
-#define CAN_Msg_Flag_TxEnd CANMSG_MSG_MOSTAT_TXPND_Msk     /*!< Флаг окончания передачи сообщения */
-#define CAN_Msg_Flag_RxUpdate CANMSG_MSG_MOSTAT_RXUPD_Msk  /*!< Флаг изменений параметров объекта сообщения */
-#define CAN_Msg_Flag_NewData CANMSG_MSG_MOSTAT_NEWDAT_Msk  /*!< Флаг изменения данных объекта сообщения */
-#define CAN_Msg_Flag_MsgLost CANMSG_MSG_MOSTAT_MSGLST_Msk  /*!< Флаг потери сообщения */
-#define CAN_Msg_Flag_Active CANMSG_MSG_MOSTAT_MSGVAL_Msk   /*!< Флаг активности объекта сообщения */
-#define CAN_Msg_Flag_RxTxSel  CANMSG_MSG_MOSTAT_RTSEL_Msk  /*!< Флаг возможности приема/передачи */
-#define CAN_Msg_Flag_RxEnable  CANMSG_MSG_MOSTAT_RXEN_Msk  /*!< Флаг разрешения приема сообщения */
-#define CAN_Msg_Flag_TxRemoteReqest CANMSG_MSG_MOSTAT_TXRQ_Msk  /*!< Флаг инициации передачи / флаг получения фрейма удаленного запроса */
-#define CAN_Msg_Flag_TxEnable0 CANMSG_MSG_MOSTAT_TXEN0_Msk     /*!< Флаг 0 разрешения передачи фрейма */
-#define CAN_Msg_Flag_TxEnable1 CANMSG_MSG_MOSTAT_TXEN1_Msk     /*!< Флаг 1 разрешения передачи фрейма */
-#define CAN_Msg_Flag_Direction CANMSG_MSG_MOSTAT_DIR_Msk   /*!< Флаг распределения */
+#define CAN_Msg_Flag_RxEnd CANMSG_Msg_MOSTAT_RXPND_Msk     /*!< Флаг окончания приема сообщения */
+#define CAN_Msg_Flag_TxEnd CANMSG_Msg_MOSTAT_TXPND_Msk     /*!< Флаг окончания передачи сообщения */
+#define CAN_Msg_Flag_RxUpdate CANMSG_Msg_MOSTAT_RXUPD_Msk  /*!< Флаг изменений параметров объекта сообщения */
+#define CAN_Msg_Flag_NewData CANMSG_Msg_MOSTAT_NEWDAT_Msk  /*!< Флаг изменения данных объекта сообщения */
+#define CAN_Msg_Flag_MsgLost CANMSG_Msg_MOSTAT_MSGLST_Msk  /*!< Флаг потери сообщения */
+#define CAN_Msg_Flag_Active CANMSG_Msg_MOSTAT_MSGVAL_Msk   /*!< Флаг активности объекта сообщения */
+#define CAN_Msg_Flag_RxTxSel  CANMSG_Msg_MOSTAT_RTSEL_Msk  /*!< Флаг возможности приема/передачи */
+#define CAN_Msg_Flag_RxEnable  CANMSG_Msg_MOSTAT_RXEN_Msk  /*!< Флаг разрешения приема сообщения */
+#define CAN_Msg_Flag_TxRemoteReqest CANMSG_Msg_MOSTAT_TXRQ_Msk  /*!< Флаг инициации передачи / флаг получения фрейма удаленного запроса */
+#define CAN_Msg_Flag_TxEnable0 CANMSG_Msg_MOSTAT_TXEN0_Msk     /*!< Флаг 0 разрешения передачи фрейма */
+#define CAN_Msg_Flag_TxEnable1 CANMSG_Msg_MOSTAT_TXEN1_Msk     /*!< Флаг 1 разрешения передачи фрейма */
+#define CAN_Msg_Flag_Direction CANMSG_Msg_MOSTAT_DIR_Msk   /*!< Флаг распределения */
 
 #define IS_CAN_MSG_FLAG(VALUE) (((VALUE) == CAN_Msg_Flag_RxEnd) ||  \
                                  ((VALUE) == CAN_Msg_Flag_TxEnd) ||  \
@@ -473,12 +473,12 @@ extern "C" {
   * @{
   */
 
-#define CAN_ITMsgSource_TxEnd 	CANMSG_MSG_MOFCR_TXIE_Msk    	/*!< Прерывание от объектов сообщений по окончании передачи */
-#define CAN_ITMsgSource_RxEnd 	CANMSG_MSG_MOFCR_RXIE_Msk    	/*!< Прерывание от объектов сообщений по окончании приема */
-#define CAN_ITMsgSource_FIFOFull 	CANMSG_MSG_MOFCR_OVIE_Msk    	/*!< Прерывание от объектов сообщений по заполнению FIFO объекта сообщения */
-#define CAN_ITMsgSource_All (CANMSG_MSG_MOFCR_TXIE_Msk |  \
-							 CANMSG_MSG_MOFCR_RXIE_Msk | \
-							 CANMSG_MSG_MOFCR_OVIE_Msk) /*!< Все источники выбраны */
+#define CAN_ITMsgSource_TxEnd 	CANMSG_Msg_MOFCR_TXIE_Msk    	/*!< Прерывание от объектов сообщений по окончании передачи */
+#define CAN_ITMsgSource_RxEnd 	CANMSG_Msg_MOFCR_RXIE_Msk    	/*!< Прерывание от объектов сообщений по окончании приема */
+#define CAN_ITMsgSource_FIFOFull 	CANMSG_Msg_MOFCR_OVIE_Msk    	/*!< Прерывание от объектов сообщений по заполнению FIFO объекта сообщения */
+#define CAN_ITMsgSource_All (CANMSG_Msg_MOFCR_TXIE_Msk |  \
+							 CANMSG_Msg_MOFCR_RXIE_Msk | \
+							 CANMSG_Msg_MOFCR_OVIE_Msk) /*!< Все источники выбраны */
 
 #define IS_CAN_ITMsgSource_SOURCE(VALUE) (((VALUE) & ~CAN_ITNodeSource_All) == 0)
 
@@ -664,17 +664,17 @@ typedef enum {
   * @brief   Флаги состояния объекта сообщения
   */
 typedef enum {
-    CAN_MsgState_RxEnd = CANMSG_MSG_MOSTAT_RXPND_Msk,     /*!< Флаг окончания приема */
-    CAN_MsgState_TxEnd = CANMSG_MSG_MOSTAT_TXPND_Msk,     /*!< Флаг окончания передачи */
-    CAN_MsgState_Update = CANMSG_MSG_MOSTAT_RXUPD_Msk,    /*!< Флаг изменения сообщения */
-    CAN_MsgState_NewData  = CANMSG_MSG_MOSTAT_NEWDAT_Msk, /*!< Флаг новых данных */
-    CAN_MsgState_Lost = CANMSG_MSG_MOSTAT_MSGLST_Msk,     /*!< Флаг потери сообщения */
-    CAN_MsgState_Active = CANMSG_MSG_MOSTAT_MSGVAL_Msk,   /*!< Флаг активности объекта сообщения */
-    CAN_MsgState_RxTxEnable = CANMSG_MSG_MOSTAT_RTSEL_Msk, /*!< Флаг возможности приема/передачи */
-    CAN_MsgState_RxEnable = CANMSG_MSG_MOSTAT_RXEN_Msk,   /*!< Флаг разрешения приема */
-    CAN_MsgState_TxRQ = CANMSG_MSG_MOSTAT_TXRQ_Msk,       /*!< Флаг инициации передачи */
-    CAN_MsgState_TxEnable = CANMSG_MSG_MOSTAT_TXEN0_Msk|CANMSG_MSG_MOSTAT_TXEN1_Msk,     /*!< Флаг разрешения передачи фрейма */
-    CAN_MsgState_DirRxTx = CANMSG_MSG_MOSTAT_DIR_Msk      /*!< Флаг распределения ообщения: прием, передача */
+    CAN_MsgState_RxEnd = CANMSG_Msg_MOSTAT_RXPND_Msk,     /*!< Флаг окончания приема */
+    CAN_MsgState_TxEnd = CANMSG_Msg_MOSTAT_TXPND_Msk,     /*!< Флаг окончания передачи */
+    CAN_MsgState_Update = CANMSG_Msg_MOSTAT_RXUPD_Msk,    /*!< Флаг изменения сообщения */
+    CAN_MsgState_NewData  = CANMSG_Msg_MOSTAT_NEWDAT_Msk, /*!< Флаг новых данных */
+    CAN_MsgState_Lost = CANMSG_Msg_MOSTAT_MSGLST_Msk,     /*!< Флаг потери сообщения */
+    CAN_MsgState_Active = CANMSG_Msg_MOSTAT_MSGVAL_Msk,   /*!< Флаг активности объекта сообщения */
+    CAN_MsgState_RxTxEnable = CANMSG_Msg_MOSTAT_RTSEL_Msk, /*!< Флаг возможности приема/передачи */
+    CAN_MsgState_RxEnable = CANMSG_Msg_MOSTAT_RXEN_Msk,   /*!< Флаг разрешения приема */
+    CAN_MsgState_TxRQ = CANMSG_Msg_MOSTAT_TXRQ_Msk,       /*!< Флаг инициации передачи */
+    CAN_MsgState_TxEnable = CANMSG_Msg_MOSTAT_TXEN0_Msk|CANMSG_Msg_MOSTAT_TXEN1_Msk,     /*!< Флаг разрешения передачи фрейма */
+    CAN_MsgState_DirRxTx = CANMSG_Msg_MOSTAT_DIR_Msk      /*!< Флаг распределения ообщения: прием, передача */
 } CAN_MsgState_TypeDef;
 #define IS_CAN_MSG_STATE_BIT(VALUE) (((VALUE) == CAN_MsgState_RxEnd) || \
                                     ((VALUE) == CAN_MsgState_TxEnd) || \
@@ -1265,7 +1265,7 @@ __STATIC_INLINE void CAN_Msg_SetDataLength(uint8_t MSGx, CAN_MSG_DataLength_Type
     assert_param(IS_GET_CAN_MSG(MSGx));
     assert_param(IS_CAN_MSG_DATA_LENGTH(DataLength));
 
-    WRITE_REG(CANMSG->MSG[MSGx].MOFCR_bit.DLC, (uint32_t)DataLength);
+    WRITE_REG(CANMSG->Msg[MSGx].MOFCR_bit.DLC, (uint32_t)DataLength);
 }
 
 /**
@@ -1277,7 +1277,7 @@ __STATIC_INLINE uint32_t CAN_Msg_GetDataLength(uint8_t MSGx)
 {
     assert_param(IS_GET_CAN_MSG(MSGx));
 
-    return (CAN_MSG_DataLength_TypeDef)READ_REG(CANMSG->MSG[MSGx].MOFCR_bit.DLC);
+    return (CAN_MSG_DataLength_TypeDef)READ_REG(CANMSG->Msg[MSGx].MOFCR_bit.DLC);
 }
 
 /**
@@ -1293,7 +1293,7 @@ __STATIC_INLINE void CAN_Msg_FlagConfig(uint8_t MSGx, uint32_t MsgFlagSet, uint3
     assert_param(IS_CAN_MSG_FLAG(MsgFlagSet));
     assert_param(IS_CAN_MSG_FLAG(MsgFlagReset));
 
-   	WRITE_REG(CANMSG->MSG[MSGx].MOCTR,((MsgFlagSet << CANMSG_MSG_MOCTR_SETRXPND_Pos)|MsgFlagReset));
+   	WRITE_REG(CANMSG->Msg[MSGx].MOCTR,((MsgFlagSet << CANMSG_Msg_MOCTR_SETRXPND_Pos)|MsgFlagReset));
 }
 
 /**
@@ -1307,8 +1307,8 @@ __STATIC_INLINE void CAN_Msg_SingleTxCmd(uint8_t MSGx, FunctionalState State)
     assert_param(IS_GET_CAN_MSG(MSGx));
     assert_param(IS_FUNCTIONAL_STATE(State));
 
-    if(State) WRITE_REG(CANMSG->MSG[MSGx].MOFCR_bit.STT, 1);
-    else WRITE_REG(CANMSG->MSG[MSGx].MOFCR_bit.STT, 0);
+    if(State) WRITE_REG(CANMSG->Msg[MSGx].MOFCR_bit.STT, 1);
+    else WRITE_REG(CANMSG->Msg[MSGx].MOFCR_bit.STT, 0);
 }
 
 /**
@@ -1321,8 +1321,8 @@ __STATIC_INLINE void CAN_Msg_SingleRxCmd(uint8_t MSGx, FunctionalState State)
 {
     assert_param(IS_GET_CAN_MSG(MSGx));
     assert_param(IS_FUNCTIONAL_STATE(State));
-    if(State) WRITE_REG(CANMSG->MSG[MSGx].MOFCR_bit.SDT, 1);
-    else WRITE_REG(CANMSG->MSG[MSGx].MOFCR_bit.SDT, 0);
+    if(State) WRITE_REG(CANMSG->Msg[MSGx].MOFCR_bit.SDT, 1);
+    else WRITE_REG(CANMSG->Msg[MSGx].MOFCR_bit.SDT, 0);
 }
 
 /**
@@ -1335,8 +1335,8 @@ __STATIC_INLINE void CAN_Msg_RemoteMonitoringCmd(uint8_t MSGx, FunctionalState S
 {
     assert_param(IS_GET_CAN_MSG(MSGx));
     assert_param(IS_FUNCTIONAL_STATE(State));
-    if(State) WRITE_REG(CANMSG->MSG[MSGx].MOFCR_bit.RMM, 1);
-    else WRITE_REG(CANMSG->MSG[MSGx].MOFCR_bit.RMM, 0);
+    if(State) WRITE_REG(CANMSG->Msg[MSGx].MOFCR_bit.RMM, 1);
+    else WRITE_REG(CANMSG->Msg[MSGx].MOFCR_bit.RMM, 0);
 }
 
 /**
@@ -1349,8 +1349,8 @@ __STATIC_INLINE void CAN_Msg_RemoteRequestCmd(uint8_t MSGx, FunctionalState Stat
 {
     assert_param(IS_GET_CAN_MSG(MSGx));
     assert_param(IS_FUNCTIONAL_STATE(State));
-    if(State) WRITE_REG(CANMSG->MSG[MSGx].MOFCR_bit.FRREN, 1);
-    else WRITE_REG(CANMSG->MSG[MSGx].MOFCR_bit.FRREN, 0);
+    if(State) WRITE_REG(CANMSG->Msg[MSGx].MOFCR_bit.FRREN, 1);
+    else WRITE_REG(CANMSG->Msg[MSGx].MOFCR_bit.FRREN, 0);
 }
 
 /**
@@ -1364,7 +1364,7 @@ __STATIC_INLINE void CAN_Msg_ModeConfig(uint8_t MSGx, CAN_MSG_Mode_TypeDef Mode)
     assert_param(IS_GET_CAN_MSG(MSGx));
     assert_param(IS_CAN_MSG_MODE(Mode));
 
-    WRITE_REG(CANMSG->MSG[MSGx].MOFCR_bit.MMC, Mode);
+    WRITE_REG(CANMSG->Msg[MSGx].MOFCR_bit.MMC, Mode);
 }
 
 /**
@@ -1378,7 +1378,7 @@ __STATIC_INLINE void CAN_Msg_ExtendedIdCmd(uint8_t MSGx, FunctionalState State)
     assert_param(IS_GET_CAN_MSG(MSGx));
     assert_param(IS_FUNCTIONAL_STATE(State));
 
-    WRITE_REG(CANMSG->MSG[MSGx].MOAR_bit.IDE, State);
+    WRITE_REG(CANMSG->Msg[MSGx].MOAR_bit.IDE, State);
 }
 
 /**
@@ -1392,7 +1392,7 @@ __STATIC_INLINE void CAN_Msg_IdConfig(uint8_t MSGx, uint32_t ID)
     assert_param(IS_GET_CAN_MSG(MSGx));
     assert_param(IS_CAN_MSG_ID(ID));
 
-    WRITE_REG(CANMSG->MSG[MSGx].MOAR_bit.ID, ID);
+    WRITE_REG(CANMSG->Msg[MSGx].MOAR_bit.ID, ID);
 }
 
 /**
@@ -1406,8 +1406,8 @@ __STATIC_INLINE void CAN_Msg_DirConfig(uint8_t MSGx, CAN_MSG_Dir_TypeDef Dir)
     assert_param(IS_GET_CAN_MSG(MSGx));
     assert_param(IS_CAN_MSG_DIR_BIT(Dir));
 
-    if(Dir==CAN_MSG_Dir_Tx) WRITE_REG(CANMSG->MSG[MSGx].MOCTR, CANMSG_MSG_MOCTR_SETDIR_Msk);
-    else WRITE_REG(CANMSG->MSG[MSGx].MOCTR, CANMSG_MSG_MOCTR_RESDIR_Msk);
+    if(Dir==CAN_MSG_Dir_Tx) WRITE_REG(CANMSG->Msg[MSGx].MOCTR, CANMSG_Msg_MOCTR_SETDIR_Msk);
+    else WRITE_REG(CANMSG->Msg[MSGx].MOCTR, CANMSG_Msg_MOCTR_RESDIR_Msk);
 }
 
 /**
@@ -1420,8 +1420,8 @@ __STATIC_INLINE void CAN_Msg_TxEnableCmd(uint8_t MSGx, FunctionalState State)
 {
     assert_param(IS_GET_CAN_MSG(MSGx));
     assert_param(IS_FUNCTIONAL_STATE(State));
-    if(State) WRITE_REG(CANMSG->MSG[MSGx].MOCTR, (CANMSG_MSG_MOCTR_SETTXEN1_Msk|CANMSG_MSG_MOCTR_SETTXEN0_Msk));
-    else WRITE_REG(CANMSG->MSG[MSGx].MOCTR, CANMSG_MSG_MOCTR_RESTXEN0_Msk);
+    if(State) WRITE_REG(CANMSG->Msg[MSGx].MOCTR, (CANMSG_Msg_MOCTR_SETTXEN1_Msk|CANMSG_Msg_MOCTR_SETTXEN0_Msk));
+    else WRITE_REG(CANMSG->Msg[MSGx].MOCTR, CANMSG_Msg_MOCTR_RESTXEN0_Msk);
 }
 
 /**
@@ -1434,8 +1434,8 @@ __STATIC_INLINE void CAN_Msg_TxInitCmd(uint8_t MSGx, FunctionalState State)
 {
     assert_param(IS_GET_CAN_MSG(MSGx));
     assert_param(IS_FUNCTIONAL_STATE(State));
-    if(State) WRITE_REG(CANMSG->MSG[MSGx].MOCTR, CANMSG_MSG_MOCTR_SETTXRQ_Msk);
-    else WRITE_REG(CANMSG->MSG[MSGx].MOCTR, CANMSG_MSG_MOCTR_RESTXRQ_Msk);
+    if(State) WRITE_REG(CANMSG->Msg[MSGx].MOCTR, CANMSG_Msg_MOCTR_SETTXRQ_Msk);
+    else WRITE_REG(CANMSG->Msg[MSGx].MOCTR, CANMSG_Msg_MOCTR_RESTXRQ_Msk);
 }
 
 /**
@@ -1448,8 +1448,8 @@ __STATIC_INLINE void CAN_Msg_RxEnableCmd(uint8_t MSGx, FunctionalState State)
 {
     assert_param(IS_GET_CAN_MSG(MSGx));
     assert_param(IS_FUNCTIONAL_STATE(State));
-    if(State) WRITE_REG(CANMSG->MSG[MSGx].MOCTR, CANMSG_MSG_MOCTR_SETRXEN_Msk);
-    else WRITE_REG(CANMSG->MSG[MSGx].MOCTR, CANMSG_MSG_MOCTR_RESRXEN_Msk);
+    if(State) WRITE_REG(CANMSG->Msg[MSGx].MOCTR, CANMSG_Msg_MOCTR_SETRXEN_Msk);
+    else WRITE_REG(CANMSG->Msg[MSGx].MOCTR, CANMSG_Msg_MOCTR_RESRXEN_Msk);
 }
 
 /**
@@ -1462,8 +1462,8 @@ __STATIC_INLINE void CAN_Msg_RxTxEnableCmd(uint8_t MSGx, FunctionalState State)
 {
     assert_param(IS_GET_CAN_MSG(MSGx));
     assert_param(IS_FUNCTIONAL_STATE(State));
-    if(State) WRITE_REG(CANMSG->MSG[MSGx].MOCTR, CANMSG_MSG_MOCTR_SETRTSEL_Msk);
-    else WRITE_REG(CANMSG->MSG[MSGx].MOCTR, CANMSG_MSG_MOCTR_RESRTSEL_Msk);
+    if(State) WRITE_REG(CANMSG->Msg[MSGx].MOCTR, CANMSG_Msg_MOCTR_SETRTSEL_Msk);
+    else WRITE_REG(CANMSG->Msg[MSGx].MOCTR, CANMSG_Msg_MOCTR_RESRTSEL_Msk);
 }
 
 /**
@@ -1476,8 +1476,8 @@ __STATIC_INLINE void CAN_Msg_EnableCmd(uint8_t MSGx, FunctionalState State)
 {
     assert_param(IS_GET_CAN_MSG(MSGx));
     assert_param(IS_FUNCTIONAL_STATE(State));
-    if(State) WRITE_REG(CANMSG->MSG[MSGx].MOCTR, CANMSG_MSG_MOCTR_SETMSGVAL_Msk);
-    else WRITE_REG(CANMSG->MSG[MSGx].MOCTR, CANMSG_MSG_MOCTR_RESMSGVAL_Msk);
+    if(State) WRITE_REG(CANMSG->Msg[MSGx].MOCTR, CANMSG_Msg_MOCTR_SETMSGVAL_Msk);
+    else WRITE_REG(CANMSG->Msg[MSGx].MOCTR, CANMSG_Msg_MOCTR_RESMSGVAL_Msk);
 }
 
 /**
@@ -1490,8 +1490,8 @@ __STATIC_INLINE void CAN_Msg_NewDataCmd(uint8_t MSGx, FunctionalState State)
 {
     assert_param(IS_GET_CAN_MSG(MSGx));
     assert_param(IS_FUNCTIONAL_STATE(State));
-    if(State) WRITE_REG(CANMSG->MSG[MSGx].MOCTR, CANMSG_MSG_MOCTR_SETNEWDAT_Msk);
-    else WRITE_REG(CANMSG->MSG[MSGx].MOCTR, CANMSG_MSG_MOCTR_RESNEWDAT_Msk);
+    if(State) WRITE_REG(CANMSG->Msg[MSGx].MOCTR, CANMSG_Msg_MOCTR_SETNEWDAT_Msk);
+    else WRITE_REG(CANMSG->Msg[MSGx].MOCTR, CANMSG_Msg_MOCTR_RESNEWDAT_Msk);
 }
 
 /**
@@ -1504,8 +1504,8 @@ __STATIC_INLINE void CAN_Msg_TxEndCmd(uint8_t MSGx, FunctionalState State)
 {
     assert_param(IS_GET_CAN_MSG(MSGx));
     assert_param(IS_FUNCTIONAL_STATE(State));
-    if(State) WRITE_REG(CANMSG->MSG[MSGx].MOCTR, CANMSG_MSG_MOCTR_SETTXPND_Msk);
-    else WRITE_REG(CANMSG->MSG[MSGx].MOCTR, CANMSG_MSG_MOCTR_RESTXPND_Msk);
+    if(State) WRITE_REG(CANMSG->Msg[MSGx].MOCTR, CANMSG_Msg_MOCTR_SETTXPND_Msk);
+    else WRITE_REG(CANMSG->Msg[MSGx].MOCTR, CANMSG_Msg_MOCTR_RESTXPND_Msk);
 }
 
 /**
@@ -1518,8 +1518,8 @@ __STATIC_INLINE void CAN_Msg_RxEndCmd(uint8_t MSGx, FunctionalState State)
 {
     assert_param(IS_GET_CAN_MSG(MSGx));
     assert_param(IS_FUNCTIONAL_STATE(State));
-    if(State) WRITE_REG(CANMSG->MSG[MSGx].MOCTR, CANMSG_MSG_MOCTR_SETRXPND_Msk);
-    else WRITE_REG(CANMSG->MSG[MSGx].MOCTR, CANMSG_MSG_MOCTR_RESRXPND_Msk);
+    if(State) WRITE_REG(CANMSG->Msg[MSGx].MOCTR, CANMSG_Msg_MOCTR_SETRXPND_Msk);
+    else WRITE_REG(CANMSG->Msg[MSGx].MOCTR, CANMSG_Msg_MOCTR_RESRXPND_Msk);
 }
 
 /**
@@ -1533,8 +1533,8 @@ __STATIC_INLINE void CAN_Msg_RxСhangCmd(uint8_t MSGx, FunctionalState State)
     assert_param(IS_GET_CAN_MSG(MSGx));
     assert_param(IS_FUNCTIONAL_STATE(State));
 
-    if(State) WRITE_REG(CANMSG->MSG[MSGx].MOCTR, CANMSG_MSG_MOCTR_SETRXUPD_Msk);
-    else WRITE_REG(CANMSG->MSG[MSGx].MOCTR, CANMSG_MSG_MOCTR_RESRXUPD_Msk);
+    if(State) WRITE_REG(CANMSG->Msg[MSGx].MOCTR, CANMSG_Msg_MOCTR_SETRXUPD_Msk);
+    else WRITE_REG(CANMSG->Msg[MSGx].MOCTR, CANMSG_Msg_MOCTR_RESRXUPD_Msk);
 }
 
 
@@ -1549,7 +1549,7 @@ __STATIC_INLINE void CAN_Msg_SetDataLo(uint8_t MSGx, uint32_t Val)
 {
     assert_param(IS_GET_CAN_MSG(MSGx));
 
-    WRITE_REG(CANMSG->MSG[MSGx].MODATAL, Val);
+    WRITE_REG(CANMSG->Msg[MSGx].MODATAL, Val);
 }
 
 /**
@@ -1561,7 +1561,7 @@ __STATIC_INLINE uint32_t CAN_Msg_GetDataLo(uint8_t MSGx)
 {
     assert_param(IS_GET_CAN_MSG(MSGx));
 
-    return READ_REG(CANMSG->MSG[MSGx].MODATAL);
+    return READ_REG(CANMSG->Msg[MSGx].MODATAL);
 }
 
 /**
@@ -1574,7 +1574,7 @@ __STATIC_INLINE void CAN_Msg_SetDataHi(uint8_t MSGx, uint32_t Val)
 {
     assert_param(IS_GET_CAN_MSG(MSGx));
 
-    WRITE_REG(CANMSG->MSG[MSGx].MODATAH, Val);
+    WRITE_REG(CANMSG->Msg[MSGx].MODATAH, Val);
 }
 
 /**
@@ -1586,7 +1586,7 @@ __STATIC_INLINE uint32_t CAN_Msg_GetDataHi(uint8_t MSGx)
 {
     assert_param(IS_GET_CAN_MSG(MSGx));
 
-    return READ_REG(CANMSG->MSG[MSGx].MODATAH);
+    return READ_REG(CANMSG->Msg[MSGx].MODATAH);
 }
 
 /**
@@ -1598,7 +1598,7 @@ __STATIC_INLINE uint32_t CAN_Msg_GetList(uint8_t MSGx)
 {
     assert_param(IS_GET_CAN_MSG(MSGx));
 
-    return READ_REG(CANMSG->MSG[MSGx].MOSTAT_bit.LIST);
+    return READ_REG(CANMSG->Msg[MSGx].MOSTAT_bit.LIST);
 }
 
 /**
@@ -1610,7 +1610,7 @@ __STATIC_INLINE uint32_t CAN_Msg_GetNextMsg(uint8_t MSGx)
 {
     assert_param(IS_GET_CAN_MSG(MSGx));
 
-    return READ_REG(CANMSG->MSG[MSGx].MOSTAT_bit.PNEXT);
+    return READ_REG(CANMSG->Msg[MSGx].MOSTAT_bit.PNEXT);
 }
 
 /**
@@ -1622,7 +1622,7 @@ __STATIC_INLINE uint32_t CAN_Msg_GetPreviousMsg(uint8_t MSGx)
 {
     assert_param(IS_GET_CAN_MSG(MSGx));
 
-    return READ_REG(CANMSG->MSG[MSGx].MOSTAT_bit.PPREV);
+    return READ_REG(CANMSG->Msg[MSGx].MOSTAT_bit.PPREV);
 }
 
 /**
@@ -1636,7 +1636,7 @@ __STATIC_INLINE void CAN_Msg_PendingConfig(uint8_t MSGx, uint8_t BitNum)
 	assert_param(IS_GET_CAN_MSG(MSGx));
     assert_param(IS_CAN_MSG_INTPEND_BITNUM(BitNum));
 
-    WRITE_REG(CANMSG->MSG[MSGx].MOIPR_bit.MPN, BitNum);
+    WRITE_REG(CANMSG->Msg[MSGx].MOIPR_bit.MPN, BitNum);
 }
 
 /**
@@ -1648,7 +1648,7 @@ __STATIC_INLINE FlagStatus CAN_Msg_PendingStatus(uint8_t BitNum)
 {
     assert_param(IS_CAN_MSG_INTPEND_BITNUM(BitNum));
 
-    if (CAN->MSPND[BitNum>>5] & (1 << (BitNum & 0x1F))) return SET;
+    if (CAN->MSPND[BitNum>>5].MSPND & (1 << (BitNum & 0x1F))) return SET;
     else return CLEAR;
 }
 
@@ -1661,7 +1661,7 @@ __STATIC_INLINE void CAN_Msg_PendingClear(uint8_t BitNum)
 {
     assert_param(IS_CAN_MSG_INTPEND_BITNUM(BitNum));
 
-    CLEAR_BIT(CAN->MSPND[BitNum>>5], (1 << (BitNum & 0x1F)));
+    CLEAR_BIT(CAN->MSPND[BitNum>>5].MSPND, (1 << (BitNum & 0x1F)));
 }
 
 /**
@@ -1677,7 +1677,7 @@ __STATIC_INLINE FlagStatus CAN_FlagStatus(uint8_t MSGx, CAN_MsgState_TypeDef Fla
     assert_param(IS_GET_CAN_MSG(MSGx));
     assert_param(IS_CAN_MSG_STATE_BIT(Flag));
 
-    return (FlagStatus)READ_BIT(CANMSG->MSG[MSGx].MOSTAT, Flag);
+    return (FlagStatus)READ_BIT(CANMSG->Msg[MSGx].MOSTAT, Flag);
 }
 
 /**
@@ -1693,7 +1693,7 @@ __STATIC_INLINE void CAN_Msg_ITCmd(uint8_t MSGx, uint32_t ITSource, FunctionalSt
 	assert_param(IS_GET_CAN_MSG(MSGx));
     assert_param(IS_CAN_ITMsgSource_SOURCE(ITSource));
 
-    MODIFY_REG(CANMSG->MSG[MSGx].MOFCR, ITSource, State ? ITSource : 0);
+    MODIFY_REG(CANMSG->Msg[MSGx].MOFCR, ITSource, State ? ITSource : 0);
 }
 
 /**
@@ -1707,7 +1707,7 @@ __STATIC_INLINE void CAN_Msg_SetIntPointerTxEnd(uint8_t MSGx, uint32_t IntLine)
 	assert_param(IS_GET_CAN_MSG(MSGx));
     assert_param(IS_GET_CAN_INTLINE(IntLine));
 
-    WRITE_REG(CANMSG->MSG[MSGx].MOIPR_bit.TXINP, IntLine);
+    WRITE_REG(CANMSG->Msg[MSGx].MOIPR_bit.TXINP, IntLine);
 }
 
 /**
@@ -1721,7 +1721,7 @@ __STATIC_INLINE void CAN_Msg_SetIntPointerRxEnd(uint8_t MSGx, uint32_t IntLine)
 	assert_param(IS_GET_CAN_MSG(MSGx));
     assert_param(IS_GET_CAN_INTLINE(IntLine));
 
-    WRITE_REG(CANMSG->MSG[MSGx].MOIPR_bit.RXINP, IntLine);
+    WRITE_REG(CANMSG->Msg[MSGx].MOIPR_bit.RXINP, IntLine);
 }
 
 /**

@@ -1,4 +1,5 @@
 set(TOOLCHAIN_BIN_PATH "${TOOLCHAIN_DIR}/bin")
+
 # Derive the toolchain binary prefix from the detected compiler if available
 if(DEFINED _GCC_EXE)
     get_filename_component(_gcc_name "${_GCC_EXE}" NAME)
@@ -9,6 +10,16 @@ if(DEFINED _GCC_EXE)
     set(TOOLCHAIN_PREFIX "${_prefix}")
 else()
     set(TOOLCHAIN_PREFIX "${CMAKE_LIBRARY_ARCHITECTURE}-")
+endif()
+
+# Handle non-standard layouts: some xpack toolchains put gcc in root, not bin/
+get_filename_component(_gcc_dir "${_GCC_EXE}" DIRECTORY)
+if(_gcc_dir MATCHES "/bin$")
+    # Standard layout: toolchain_root/bin/gcc
+    # TOOLCHAIN_BIN_PATH already set correctly
+else()
+    # Non-standard: gcc is directly in toolchain root
+    set(TOOLCHAIN_BIN_PATH "${_gcc_dir}")
 endif()
 
 set(TOOLCHAIN_INC_PATH "${TOOLCHAIN_DIR}/${CMAKE_LIBRARY_ARCHITECTURE}/include")

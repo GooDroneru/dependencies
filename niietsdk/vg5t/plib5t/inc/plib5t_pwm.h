@@ -1476,7 +1476,7 @@ __STATIC_INLINE void PWM_TZ_CycleCmd(PWM_TypeDef* PWMx, FunctionalState State)
     assert_param(IS_PWM_PERIPH(PWMx));
     assert_param(IS_FUNCTIONAL_STATE(State));
 
-    WRITE_REG(PWMx->TZSEL_bit.CBC, State);
+    WRITE_REG(PWMx->TZSEL_bit.CBC0, State);
 }
 
 /**
@@ -1490,7 +1490,7 @@ __STATIC_INLINE void PWM_TZ_OneShotCmd(PWM_TypeDef* PWMx, FunctionalState State)
     assert_param(IS_PWM_PERIPH(PWMx));
     assert_param(IS_FUNCTIONAL_STATE(State));
 
-    WRITE_REG(PWMx->TZSEL_bit.OST, State);
+    WRITE_REG(PWMx->TZSEL_bit.OST0, State);
 }
 
 /**

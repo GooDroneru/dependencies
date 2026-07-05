@@ -29,7 +29,7 @@
 
 /* Раскомментируйте/закоментируйте, чтобы включить/отключить заголовочный файл периферии */
 #include "plib5t_adc.h"
-//#include "plib5t_flash.h"
+#include "plib5t_flash.h"
 #include "plib5t_can.h"
 #include "plib5t_cap.h"
 //#include "plib5t_dma.h"

@@ -15,9 +15,9 @@
 
 
 // pointers to handler functions for machine mode
-irqfunc* mach_plic_handler[128] __attribute__((section(".data")));
+irqfunc* mach_plic_handler[128];
 // pointers to handler functions for supervisor mode
-irqfunc* supervisor_plic_handler[128] __attribute__((section(".data")));
+irqfunc* supervisor_plic_handler[128];
 
 /*
  * Registers of PLIC module

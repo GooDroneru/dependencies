@@ -281,13 +281,13 @@ extern "C" {
   *         c несколькими тактовыми доменами - UART, QSPI, SPI, WDT, ADCSAR, ADCSD
   */
 typedef enum {
-    RCU_PeriphClk_HsiClk = RCU_UARTCFG_CLKSEL_HSICLK,       /*!< Сигнал HSICLK */
-    RCU_PeriphClk_HseClk = RCU_UARTCFG_CLKSEL_HSECLK,       /*!< Сигнал HSCLK */
+    RCU_PeriphClk_HsiClk = RCU_UARTCFG_CLKSEL_REFCLK,       /*!< Сигнал HSICLK ( REFCLK ) */
+    RCU_PeriphClk_HseClk = RCU_UARTCFG_CLKSEL_SRCCLK,       /*!< Сигнал HSECLK ( SRCCLK ) */
     RCU_PeriphClk_PllClk = RCU_UARTCFG_CLKSEL_PLLCLK,       /*!< Сигнал PLLCLK */
     RCU_PeriphClk_ExtClk = RCU_UARTCFG_CLKSEL_EXTCLK        /*!< Сигнал EXTCLK */
 } RCU_PeriphClk_TypeDef;
 #define IS_RCU_PERIPH_CLK(VALUE) (((VALUE) == RCU_PeriphClk_HsiClk) ||    \
-                                  ((VALUE) == RCU_PeriphClk_HsClk) ||    \
+                                  ((VALUE) == RCU_PeriphClk_HseClk) ||    \
                                   ((VALUE) == RCU_PeriphClk_PllClk) || \
                                   ((VALUE) == RCU_PeriphClk_ExtClk))
 
@@ -534,6 +534,17 @@ __STATIC_INLINE void RCU_PLL_OutCmd(FunctionalState State)
     assert_param(IS_FUNCTIONAL_STATE(State));
 
     WRITE_REG(RCU->PLLCFG_bit.FOUTEN, State);
+}
+
+
+/**
+  * @brief   Статус блокировки PLL (PLL Lock)
+  * @retval  SET   PLL locked
+  * @retval  CLEAR PLL not locked
+  */
+__STATIC_INLINE FlagStatus RCU_PLL_LockStatus(void)
+{
+    return (FlagStatus)READ_BIT(RCU->INTSTAT, RCU_INTSTAT_PLLLOCK_Msk);
 }
 
 

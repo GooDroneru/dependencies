@@ -142,7 +142,7 @@ void ClkInit()
 			       (1 << RCU_PLLCFG_VCOMODE_Pos) |
 			       (0 << RCU_PLLCFG_ST_Pos) ;				  // ST = 0 for integer divider
 #elif (HSECLK_VAL == 16000000)
-    //FOUT = 120 000 000 Hz  from 16 MHz HSE
+    //FOUT = 96 000 000 Hz  from 16 MHz HSE
     // RCU->PLLDIV is equivalent for RCU->PLL[0].DIV
     RCU->PLLDIV = ( 3 << RCU_PLLDIV_DIV1A_Pos ) |
                   ( 1 << RCU_PLLDIV_DIV1B_Pos ) |
@@ -150,7 +150,7 @@ void ClkInit()
                   ( 1 << RCU_PLLDIV_NNCLR_Pos ) |             // N-divider enable
                   ( 1 << RCU_PLLDIV_RNCLR_Pos ) |             // R-divider enable
                   ( 1 << RCU_PLLDIV_RDIV_Pos  ) |
-                  (100 << RCU_PLLDIV_NDIV_Pos );
+                  (96 << RCU_PLLDIV_NDIV_Pos );
 	RCU->PLLMOD  = (1 << RCU_PLLFRAC_FRAC_Pos );
 	RCU->PLLFRAC = (1 << RCU_PLLMOD_MOD_Pos   );
 	RCU->PLLCFG  = (1 << RCU_PLLCFG_FOUTEN_Pos ) |			// Fout enable

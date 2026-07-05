@@ -1,4 +1,4 @@
-# K1921VG5T — RISC-V 32IMFD_Zicsr_Zifencei (Syntacore SCR4)
+# K1921VG5T — RISC-V 32IMFC_Zicsr_Zifencei (Syntacore SCR1-based)
 # Usage in project CMakeLists.txt (before project()):
 #   set(CMAKE_DIR path/to/dependencies/cmake)
 #   include(${CMAKE_DIR}/riscv/K1921VG5T.cmake)
@@ -8,11 +8,11 @@
 #   target_link_libraries(my_target PRIVATE niietsdk K1921VG5T NANO NOSYS)
 #   gcc_add_linker_script(my_target PRIVATE ${K1921VG5T_LD_SCRIPT})
 
-include(${CMAKE_CURRENT_LIST_DIR}/../toolchain/riscv-none-embed.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/../toolchain/riscv32-unknown-elf.cmake)
 
-# ISA: rv32i base + m f d _zicsr _zifencei + c (compressed)
-set(MCU_ARCH   rv32imfd_zicsr_zifencei)
-# ABI: ilp32 + d (double floating point)
+# ISA: rv32imafdc (toolchain default: --with-arch=rv32gc, 20191213 spec includes zicsr+zifencei)
+set(MCU_ARCH   rv32imafdc)
+# ABI: ilp32d (toolchain default: --with-abi=ilp32d; multilib disabled, must match libraries)
 set(MCU_ABI    ilp32d)
 
 # Default linker script shipped with niietsdk. Projects can override this variable.
@@ -47,6 +47,9 @@ target_compile_options(K1921VG5T INTERFACE
     -fmessage-length=0
     -fno-builtin
     -fno-common
+    -Wno-aggressive-loop-optimizations
+    -Os
+    -flto
     # C++ runtime overhead reduction
     $<$<COMPILE_LANGUAGE:CXX>:
         -fno-exceptions
@@ -59,20 +62,14 @@ target_compile_options(K1921VG5T INTERFACE
 
 target_link_options(K1921VG5T INTERFACE
     ${_K1921VG5T_ARCH_FLAGS}
+    -flto
     -Wl,--gc-sections
     -Wl,--print-memory-usage
     -nostartfiles
-    -nostdlib
-    -lgcc
-    -lc
 )
 
 target_compile_definitions(K1921VG5T INTERFACE
     K1921VG5T
     "__weak=__attribute__((weak))"
     "__packed=__attribute__((__packed__))"
-    # Required by system_k1921vg5t.c for clock initialization
-    HSECLK_VAL=16000000
-    SYSCLK_PLL
-    CKO_HSE
 )
