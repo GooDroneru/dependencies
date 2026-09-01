@@ -149,18 +149,24 @@ typedef enum Plic_IsrVect {
 /*                         System Specific Defenitions                        */
 /******************************************************************************/
 /*--  System memory ----------------------------------------------------------*/
-/*--  Flash size: 64kb, RAM size: 16Kb, --------------------------------------*/
+/*--  Flash size: 512kb (512 pages x 1Kb, UM 9.1), RAM size: 16Kb ------------*/
 #define MEM_FLASH_BASE                       0x00000000UL
-#define MEM_FLASH_BUS_WIDTH_WORDS            16UL
-#define MEM_FLASH_PAGE_SIZE                  4096UL
-#define MEM_FLASH_PAGE_SIZE_LOG2             12UL
-#define MEM_FLASH_PAGE_TOTAL                 16UL
-#define MEM_FLASH_SIZE                       (MEM_MFLASH_PAGE_TOTAL*MEM_MFLASH_PAGE_SIZE)
+#define MEM_FLASH_BUS_WIDTH_WORDS            2UL
+#define MEM_FLASH_PAGE_SIZE                  1024UL
+#define MEM_FLASH_PAGE_SIZE_LOG2             10UL
+#define MEM_FLASH_PAGE_TOTAL                 512UL
+#define MEM_FLASH_SIZE                       (MEM_FLASH_PAGE_TOTAL*MEM_FLASH_PAGE_SIZE)
+/*--  NVR area: 16 pages x 1Kb (UM 9.1), controller access only (NVRON=1) ----*/
+#define MEM_FLASH_NVR_PAGE_SIZE              (MEM_FLASH_PAGE_SIZE)
+#define MEM_FLASH_NVR_PAGE_SIZE_LOG2         (MEM_FLASH_PAGE_SIZE_LOG2)
+#define MEM_FLASH_NVR_PAGE_TOTAL             16UL
+#define MEM_FLASH_NVR_SIZE                   (MEM_FLASH_NVR_PAGE_TOTAL*MEM_FLASH_NVR_PAGE_SIZE)
 #define MEM_RAM0_BASE                         0x20000000UL
 #define MEM_RAM0_SIZE                         0x4000UL
 
 /*--  CFGWORD: System configure word -----------------------------------------*/
-#define CFGWORD_BASE                          0x00001FF0UL
+/* Last cell of the 16th NVR page (UM 9.1): 0x0007_FFF8 */
+#define CFGWORD_BASE                          0x0007FFF8UL
 
 typedef struct {
     uint32_t JTAGEN               : 1;                              /*!< Enable JTAG pins (default 1 - enabled) */
@@ -3573,21 +3579,17 @@ typedef struct {
 /******************************************************************************/
 
 /*--  ADDR: Address Register ----------------------------------------------------------------------------------*/
+/* Per UM (ADDR register): ADDRESS[18:0], byte address, 8-byte aligned
+ * (bits 2-0 ignored); bits 31-19 reserved. */
 typedef struct {
-  uint32_t BYTESEL                :4;                                /*!< Address value for each byte */
-  uint32_t ADDRESS                :14;                               /*!< Address value to selected flash IP */
-  uint32_t BANK                   :4;                                /*!< Address value for flash operations (Bank number) */
+  uint32_t ADDRESS                :19;                               /*!< Address value (8-byte aligned) */
 } _FLASH_ADDR_bits;
 
 /* Bit field positions: */
-#define FLASH_ADDR_BYTESEL_Pos                0                      /*!< Address value for each byte */
-#define FLASH_ADDR_ADDRESS_Pos                4                      /*!< Address value to selected flash IP */
-#define FLASH_ADDR_BANK_Pos                   18                     /*!< Address value for flash operations (Bank number) */
+#define FLASH_ADDR_ADDRESS_Pos                0                      /*!< Address value (8-byte aligned) */
 
 /* Bit field masks: */
-#define FLASH_ADDR_BYTESEL_Msk                0x0000000FUL           /*!< Address value for each byte */
-#define FLASH_ADDR_ADDRESS_Msk                0x0003FFF0UL           /*!< Address value to selected flash IP */
-#define FLASH_ADDR_BANK_Msk                   0x003C0000UL           /*!< Address value for flash operations (Bank number) */
+#define FLASH_ADDR_ADDRESS_Msk                0x0007FFFFUL           /*!< Address value (8-byte aligned) */
 
 /*--  DATA: Data Register -------------------------------------------------------------------------------------*/
 typedef struct {
@@ -3747,8 +3749,8 @@ typedef struct {
     __IO _FLASH_ADDR_bits  ADDR_bit;                                 /*!< ADDR_bit: structure used for bit access */
   };
     __IO uint32_t Reserved0[3];
-  _FLASH_DATA_TypeDef DATA[4];
-    __IO uint32_t Reserved1[8];
+  _FLASH_DATA_TypeDef DATA[2];
+    __IO uint32_t Reserved1[10];
   union {                                                               /*!< Command Register */
     __IO uint32_t CMD;                                               /*!< CMD    : type used for word access */
     __IO _FLASH_CMD_bits  CMD_bit;                                   /*!< CMD_bit: structure used for bit access */

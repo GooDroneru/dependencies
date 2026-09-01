@@ -31,17 +31,18 @@ uint32_t SystemPllClock; // System PLL0Clock Frequency
 void SystemCoreClockUpdate(void)
 {
     uint32_t current_sysclk;
-    uint32_t pll_fvco;
-    uint32_t pll_refclk, pll_pda, pll_pdb, pll_prediv, pll_rdiv, pll_ndiv;
+    //uint32_t pll_fvco;
+    //uint32_t pll_prediv;
+    uint32_t pll_refclk, pll_pda, pll_pdb, pll_rdiv, pll_ndiv;
     current_sysclk = RCU->CLKSTAT_bit.SRC;
     if(RCU->PLLCFG_bit.CLKSEL) pll_refclk = EXTCLK_VAL;
     else pll_refclk = HSECLK_VAL;
-   	pll_prediv = RCU->PLLDIV_bit.PREDIV;
+   	//pll_prediv = RCU->PLLDIV_bit.PREDIV;
    	pll_rdiv = RCU->PLLDIV_bit.RDIV + 1;
     pll_ndiv = RCU->PLLDIV_bit.NDIV;
    	pll_pda = RCU->PLLDIV_bit.DIV1A + 1;
    	pll_pdb = RCU->PLLDIV_bit.DIV1B + 1;
-   	pll_fvco = pll_refclk*pll_ndiv*pll_prediv/pll_rdiv;
+   	//pll_fvco = pll_refclk*pll_ndiv*pll_prediv/pll_rdiv;
    	SystemPllClock = pll_refclk*pll_ndiv/(pll_rdiv*pll_pda*pll_pdb);
     switch (current_sysclk) {
     case RCU_CLKSTAT_SRC_HSICLK:
