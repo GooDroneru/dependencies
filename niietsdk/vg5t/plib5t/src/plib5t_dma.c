@@ -57,11 +57,12 @@
   *                         которая содержит конфигурационную информацию канала
   * @retval  void
   */
-void DMA_ChannelDeInit(DMA_Channel_TypeDef* ChannelStruct)
+void DMA_ChannelDeInit(DMA_ChannelInit_TypeDef* ChannelInitStruct)
 {
-    ChannelStruct->SRC_DATA_END_PTR = 0;
-    ChannelStruct->DST_DATA_END_PTR = 0;
-    ChannelStruct->CHANNEL_CFG = 0;
+    ChannelInitStruct->SrcDataPtr = 0;
+    ChannelInitStruct->DstDataPtr = 0;
+    ChannelInitStruct->NextDescrPtr = 0;
+    ChannelInitStruct->BytesTotal = 0;
 }
 
 /**
@@ -73,26 +74,23 @@ void DMA_ChannelDeInit(DMA_Channel_TypeDef* ChannelStruct)
   */
 void DMA_ChannelInit(uint32_t Channel, DMA_ChannelInit_TypeDef* ChannelInitStruct)
 {
-    assert_param(IS_DMA_MODE(ChannelInitStruct->Mode));
-    assert_param(IS_DMA_ARBITRATION_RATE(ChannelInitStruct->ArbitrationRate));
-    assert_param(IS_DMA_DATA_INC(ChannelInitStruct->DstDataInc));
-    assert_param(IS_DMA_DATA_INC(ChannelInitStruct->SrcDataInc));
-    assert_param(IS_DMA_DATA_SIZE(ChannelInitStruct->DstDataSize));
     assert_param(IS_DMA_DATA_SIZE(ChannelInitStruct->SrcDataSize));
-    assert_param(IS_DMA_TRANSFERS_TOTAL(ChannelInitStruct->TransfersTotal));
+    assert_param(IS_DMA_DATA_SIZE(ChannelInitStruct->DstDataSize));
+    assert_param(IS_DMA_TRANSFERS_TOTAL(ChannelInitStruct->BytesTotal));
 
-    /* источник */
+    /* Источник */
     DMA_CH_SrcPtrConfig(Channel, (uint32_t)ChannelInitStruct->SrcDataPtr);
     DMA_CH_SrcDataSizeConfig(Channel, ChannelInitStruct->SrcDataSize);
-    //DMA_CH_SrcDataIncConfig(Channel, ChannelInitStruct->SrcDataInc);
-    /* приемник */
+    DMA_CH_SrcDataIncConfig(Channel, ChannelInitStruct->SrcDataInc);
+    DMA_CH_ReadPeripheralNumConfig(Channel, ChannelInitStruct->SrcReqest);
+    /* Приёмник */
     DMA_CH_DstPtrConfig(Channel, (uint32_t)ChannelInitStruct->DstDataPtr);
     DMA_CH_DstDataSizeConfig(Channel, ChannelInitStruct->DstDataSize);
-    //DMA_CH_DstDataIncConfig(Channel, ChannelInitStruct->DstDataInc);
-    /* общее */
+    DMA_CH_DstDataIncConfig(Channel, ChannelInitStruct->DstDataInc);
+    DMA_CH_WritePeripheralNumConfig(Channel, ChannelInitStruct->DstReqest);
+    /* Дескриптор */
     DMA_CH_NextAddressConfig(Channel, (uint32_t)ChannelInitStruct->NextDescrPtr);
     DMA_CH_LastDescrCmd(Channel, ChannelInitStruct->LastDescr);
-    //ChannelInitStruct->InterruptEnable = DISABLE;
     DMA_CH_DataSizeConfig(Channel, ChannelInitStruct->BytesTotal);
 }
 

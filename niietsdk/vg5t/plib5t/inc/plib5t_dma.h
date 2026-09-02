@@ -275,7 +275,7 @@ typedef struct
   * @{
   */
 
-void DMA_ChannelDeInit(DMA_Channel_TypeDef* ChannelStruct);
+void DMA_ChannelDeInit(DMA_ChannelInit_TypeDef* ChannelInitStruct);
 void DMA_ChannelInit(uint32_t Channel, DMA_ChannelInit_TypeDef* ChannelInitStruct);
 void DMA_ChannelStructInit(DMA_ChannelInit_TypeDef* ChannelInitStruct);
 

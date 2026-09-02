@@ -15,9 +15,8 @@
 
 
 // pointers to handler functions for machine mode
+// (supervisor mode handler table removed: unused, was wasting 512 B of RAM)
 irqfunc* mach_plic_handler[128];
-// pointers to handler functions for supervisor mode
-irqfunc* supervisor_plic_handler[128];
 
 /*
  * Registers of PLIC module
@@ -101,11 +100,8 @@ void     PLIC_ClaimComplete (uint8_t target, uint32_t isrnum);
 
 void PLIC_SetIrqHandler (uint8_t target, uint32_t isr_num, irqfunc* func)
 {
-    if(target == Plic_Mach_Target) {
-        mach_plic_handler[isr_num] = func;
-    } else {
-        supervisor_plic_handler[isr_num] = func;
-    }
+    (void)target;
+    mach_plic_handler[isr_num] = func;
 }
 /*
  * Set PLIC irq priority

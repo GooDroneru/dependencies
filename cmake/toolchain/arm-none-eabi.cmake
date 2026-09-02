@@ -31,6 +31,7 @@ else()
     endif()
     get_filename_component(_SYS_GCC_DIR "${_SYS_GCC}" DIRECTORY)
     get_filename_component(TOOLCHAIN_DIR "${_SYS_GCC_DIR}/.." ABSOLUTE)
+    set(_GCC_EXE "${_SYS_GCC}")
     message(STATUS "Found arm-none-eabi toolchain (system): ${_SYS_GCC}")
 endif()
 

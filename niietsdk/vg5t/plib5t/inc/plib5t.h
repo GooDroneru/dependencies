@@ -45,7 +45,7 @@ extern "C" {
   * @{
   */
 
-#define __STATIC_INLINE inline
+#define __STATIC_INLINE static inline
 
 #define SET_BIT(REG, BIT) ((REG) |= (BIT))
 
