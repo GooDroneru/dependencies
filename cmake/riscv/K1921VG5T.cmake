@@ -11,7 +11,7 @@
 include(${CMAKE_CURRENT_LIST_DIR}/../toolchain/riscv32-unknown-elf.cmake)
 
 # ISA: rv32imafdc (toolchain default: --with-arch=rv32gc, 20191213 spec includes zicsr+zifencei)
-set(MCU_ARCH   rv32imafdc)
+set(MCU_ARCH   rv32imafdc_zicsr_zifencei)
 # ABI: ilp32d (toolchain default: --with-abi=ilp32d; multilib disabled, must match libraries)
 set(MCU_ABI    ilp32d)
 
@@ -48,7 +48,7 @@ target_compile_options(K1921VG5T INTERFACE
     -fno-builtin
     -fno-common
     -Wno-aggressive-loop-optimizations
-    -Os
+    $<$<CONFIG:Release>:-Os>
     -flto
     # C++ runtime overhead reduction
     $<$<COMPILE_LANGUAGE:CXX>:
