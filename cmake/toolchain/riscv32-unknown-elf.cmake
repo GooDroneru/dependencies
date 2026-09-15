@@ -39,12 +39,17 @@ if(NOT DEFINED _GCC_EXE)
         foreach(_candidate
             "/opt/riscv-gnu-toolchain"
             "/tools/xpack-riscv-none-embed-gcc"
+            "${CMAKE_CURRENT_LIST_DIR}/../../tools/risc/riscv-toolchain/riscv32-unknown-elf-gcc-14.1.0"
             "${CMAKE_CURRENT_LIST_DIR}/../../tools/risc/riscv-toolchain/risc-none-embed-gcc-8.2.0"
         )
             if(EXISTS "${_candidate}/bin/riscv64-unknown-elf-gcc" OR
+               EXISTS "${_candidate}/bin/riscv64-unknown-elf-gcc.exe" OR
                EXISTS "${_candidate}/bin/riscv32-unknown-elf-gcc" OR
+               EXISTS "${_candidate}/bin/riscv32-unknown-elf-gcc.exe" OR
                EXISTS "${_candidate}/bin/riscv-none-elf-gcc" OR
-               EXISTS "${_candidate}/bin/riscv-none-embed-gcc")
+               EXISTS "${_candidate}/bin/riscv-none-elf-gcc.exe" OR
+               EXISTS "${_candidate}/bin/riscv-none-embed-gcc" OR
+               EXISTS "${_candidate}/bin/riscv-none-embed-gcc.exe")
                 set(_TOOLCHAIN_ROOT "${_candidate}")
                 break()
             endif()

@@ -8,7 +8,7 @@
 
 #ifndef MTIME_FREQ_HZ
 	#if defined SYSCLK_HSI
-		MTIME_FREQ_HZ 1000000ULL
+		#define MTIME_FREQ_HZ 1000000ULL
 	#elif defined SYSCLK_HSE
 		#define MTIME_FREQ_HZ HSECLK_VAL
 	#else
