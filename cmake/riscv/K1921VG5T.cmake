@@ -10,10 +10,10 @@
 
 include(${CMAKE_CURRENT_LIST_DIR}/../toolchain/riscv32-unknown-elf.cmake)
 
-# ISA: rv32imafdc (toolchain default: --with-arch=rv32gc, 20191213 spec includes zicsr+zifencei)
-set(MCU_ARCH   rv32imafdc_zicsr_zifencei)
-# ABI: ilp32d (toolchain default: --with-abi=ilp32d; multilib disabled, must match libraries)
-set(MCU_ABI    ilp32d)
+# ISA: rv32imafc (K1921VG5T misa=A,C,F,I,M,U -> single-precision FPU only, no D)
+set(MCU_ARCH   rv32imafc_zicsr_zifencei)
+# ABI: ilp32f (must match the F-only FPU; NIIET toolchain ships this multilib)
+set(MCU_ABI    ilp32f)
 
 # Default linker script shipped with niietsdk. Projects can override this variable.
 set(K1921VG5T_LD_SCRIPT
@@ -49,6 +49,12 @@ target_compile_options(K1921VG5T INTERFACE
     -fno-common
     -Wno-aggressive-loop-optimizations
     $<$<CONFIG:Release>:-Os>
+    # -Og code plus data overruns the 4KB bootloader region by ~70B. Keeping
+    # -Og, share prologues/epilogues via libgcc (save/restore) and drop
+    # function/jump/loop alignment padding to shrink code.
+    $<$<CONFIG:Debug>:-falign-functions=1>
+    $<$<CONFIG:Debug>:-falign-jumps=1>
+    $<$<CONFIG:Debug>:-falign-loops=1>
     -flto
     # C++ runtime overhead reduction
     $<$<COMPILE_LANGUAGE:CXX>:
@@ -63,6 +69,14 @@ target_compile_options(K1921VG5T INTERFACE
 target_link_options(K1921VG5T INTERFACE
     ${_K1921VG5T_ARCH_FLAGS}
     -flto
+    # LTO recompiles GIMPLE at link time: without per-function sections here,
+    # --gc-sections cannot drop unreferenced functions (LTRANS emits one .text).
+    -ffunction-sections
+    -fdata-sections
+    # Must match the compile option: LTO codegen happens here.
+    $<$<CONFIG:Debug>:-falign-functions=1>
+    $<$<CONFIG:Debug>:-falign-jumps=1>
+    $<$<CONFIG:Debug>:-falign-loops=1>
     -Wl,--gc-sections
     -Wl,--print-memory-usage
     -nostartfiles
