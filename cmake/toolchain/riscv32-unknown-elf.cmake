@@ -35,41 +35,35 @@ if(NOT DEFINED _GCC_EXE)
         set(_TOOLCHAIN_ROOT "$ENV{RISCV_TOOLCHAIN_DIR}")
         message(STATUS "Using RISCV_TOOLCHAIN_DIR from environment: ${_TOOLCHAIN_ROOT}")
     else()
-        # Devcontainer paths
+        # Devcontainer / Windows-native toolchain roots
+        if(WIN32)
+            set(_GCC_SUFFIX ".exe")
+        else()
+            set(_GCC_SUFFIX "")
+        endif()
         foreach(_candidate
             "/opt/riscv-gnu-toolchain"
-            "/tools/xpack-riscv-none-embed-gcc"
             "${CMAKE_CURRENT_LIST_DIR}/../../tools/risc/riscv-toolchain/riscv32-unknown-elf-gcc-14.1.0"
-            "${CMAKE_CURRENT_LIST_DIR}/../../tools/risc/riscv-toolchain/risc-none-embed-gcc-8.2.0"
         )
-            if(EXISTS "${_candidate}/bin/riscv64-unknown-elf-gcc" OR
-               EXISTS "${_candidate}/bin/riscv64-unknown-elf-gcc.exe" OR
-               EXISTS "${_candidate}/bin/riscv32-unknown-elf-gcc" OR
-               EXISTS "${_candidate}/bin/riscv32-unknown-elf-gcc.exe" OR
-               EXISTS "${_candidate}/bin/riscv-none-elf-gcc" OR
-               EXISTS "${_candidate}/bin/riscv-none-elf-gcc.exe" OR
-               EXISTS "${_candidate}/bin/riscv-none-embed-gcc" OR
-               EXISTS "${_candidate}/bin/riscv-none-embed-gcc.exe")
+            if(EXISTS "${_candidate}/bin/riscv64-unknown-elf-gcc${_GCC_SUFFIX}" OR
+               EXISTS "${_candidate}/bin/riscv32-unknown-elf-gcc${_GCC_SUFFIX}" OR
+               EXISTS "${_candidate}/bin/riscv-none-elf-gcc${_GCC_SUFFIX}" OR
+               EXISTS "${_candidate}/bin/riscv-none-embed-gcc${_GCC_SUFFIX}")
                 set(_TOOLCHAIN_ROOT "${_candidate}")
                 break()
             endif()
         endforeach()
         if(NOT DEFINED _TOOLCHAIN_ROOT)
-            set(_TOOLCHAIN_ROOT "${CMAKE_CURRENT_LIST_DIR}/../../tools/risc/riscv-toolchain/risc-none-embed-gcc-8.2.0")
+            set(_TOOLCHAIN_ROOT "${CMAKE_CURRENT_LIST_DIR}/../../tools/risc/riscv-toolchain/riscv32-unknown-elf-gcc-14.1.0")
             message(STATUS "Using pinned toolchain root: ${_TOOLCHAIN_ROOT}")
         endif()
     endif()
 
     foreach(_triplet "riscv64-unknown-elf" "riscv32-unknown-elf" "riscv-none-elf" "riscv-none-embed")
-        foreach(_suffix "" ".exe")
-            set(_candidate "${_TOOLCHAIN_ROOT}/bin/${_triplet}-gcc${_suffix}")
-            if(EXISTS "${_candidate}")
-                set(TOOLCHAIN_TRIPLET "${_triplet}")
-                set(_GCC_EXE "${_candidate}")
-                break()
-            endif()
-        endforeach()
-        if(DEFINED _GCC_EXE)
+        set(_candidate "${_TOOLCHAIN_ROOT}/bin/${_triplet}-gcc${_GCC_SUFFIX}")
+        if(EXISTS "${_candidate}")
+            set(TOOLCHAIN_TRIPLET "${_triplet}")
+            set(_GCC_EXE "${_candidate}")
             break()
         endif()
     endforeach()

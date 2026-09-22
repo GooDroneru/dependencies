@@ -4,10 +4,9 @@ set(CMAKE_SYSTEM_PROCESSOR rv32imac)
 
 # Try PATH first (compiler in /usr/local/bin from devcontainer)
 find_program(_PATH_GCC NAMES
-    riscv-wch-elf-gcc
+    riscv-none-embed-gcc
     riscv64-unknown-elf-gcc
     riscv-none-elf-gcc
-    riscv-none-embed-gcc
     riscv32-unknown-elf-gcc
 )
 if(_PATH_GCC)
@@ -37,9 +36,9 @@ if(NOT DEFINED _GCC_EXE)
         set(_TOOLCHAIN_ROOT "$ENV{RISCV_TOOLCHAIN_DIR}")
         message(STATUS "Using RISCV_TOOLCHAIN_DIR from environment: ${_TOOLCHAIN_ROOT}")
     else()
-        # Devcontainer path
-        set(_DC_TOOLCHAIN_ROOT "/tools/xpack-riscv-none-embed-gcc")
-        # CI path (GooDroneru/dependencies LFS)
+        # Devcontainer path (native Linux WCH/MounRiver riscv-none-embed-gcc 8.2.0)
+        set(_DC_TOOLCHAIN_ROOT "/opt/riscv-none-embed-gcc-8.2.0")
+        # CI path (GooDroneru/dependencies LFS, Windows build)
         set(_CI_TOOLCHAIN_ROOT "${CMAKE_CURRENT_LIST_DIR}/../../tools/risc/riscv-toolchain/risc-none-embed-gcc-8.2.0")
 
         if(EXISTS "${_DC_TOOLCHAIN_ROOT}/bin/riscv-none-embed-gcc")
@@ -51,16 +50,16 @@ if(NOT DEFINED _GCC_EXE)
         endif()
     endif()
 
-    foreach(_triplet "riscv-wch-elf" "riscv64-unknown-elf" "riscv-none-elf" "riscv-none-embed" "riscv32-unknown-elf")
-        foreach(_suffix "" ".exe")
-            set(_candidate "${_TOOLCHAIN_ROOT}/bin/${_triplet}-gcc${_suffix}")
-            if(EXISTS "${_candidate}")
-                set(TOOLCHAIN_TRIPLET "${_triplet}")
-                set(_GCC_EXE "${_candidate}")
-                break()
-            endif()
-        endforeach()
-        if(DEFINED _GCC_EXE)
+    if(WIN32)
+        set(_GCC_SUFFIX ".exe")
+    else()
+        set(_GCC_SUFFIX "")
+    endif()
+    foreach(_triplet "riscv-none-embed" "riscv64-unknown-elf" "riscv-none-elf" "riscv32-unknown-elf")
+        set(_candidate "${_TOOLCHAIN_ROOT}/bin/${_triplet}-gcc${_GCC_SUFFIX}")
+        if(EXISTS "${_candidate}")
+            set(TOOLCHAIN_TRIPLET "${_triplet}")
+            set(_GCC_EXE "${_candidate}")
             break()
         endif()
     endforeach()

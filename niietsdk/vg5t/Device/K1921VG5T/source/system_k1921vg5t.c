@@ -199,8 +199,14 @@ void ClkInit()
 #endif
 	//select PLL as source system clock
 	sysclk_source = RCU_SYSCLKCFG_SRC_PLLCLK;
-    // FLASH control settings
-    FLASH->CTRL_bit.LAT = 2;
+    // FLASH control settings.
+    // The stock NIIET code only writes LAT and leaves the fetch buffer off.
+    // The working K1921VG7T bare-metal reference (same SCR4 core) flushes the
+    // fetch buffer, sets latency = ceil(fclk / 35 MHz) and *enables* prefetch
+    // (FBEN). At 96 MHz latency = 2, matching the previous hard-coded value.
+    FLASH->CTRL_bit.CFLUSH = 1;
+    (void)FLASH->CTRL;
+    FLASH->CTRL = (2u << FLASH_CTRL_LAT_Pos) | FLASH_CTRL_FBEN_Msk;
     // enable/init caches
     //cache_enable(1,0); // Cash enable for Flash
 #elif defined SYSCLK_HSI

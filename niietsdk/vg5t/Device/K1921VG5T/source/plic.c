@@ -18,6 +18,11 @@
 // (supervisor mode handler table removed: unused, was wasting 512 B of RAM)
 irqfunc* mach_plic_handler[128];
 
+/* TEMP DEBUG: last trap/exception info (read these in the debugger). */
+volatile uint32_t trap_mcause;
+volatile uint32_t trap_mepc;
+volatile uint32_t trap_mtval;
+
 /*
  * Registers of PLIC module
  */
@@ -205,6 +210,12 @@ void trap_handler (void) {
     uint32_t mcause_val = read_csr(mcause);
 
     if ((mcause_val & TRAP_CAUSE_INTERRUPT_FLAG) == 0) {
+        /* TEMP DEBUG: capture fault info so it can be read in the debugger
+         * (or via the UART/scope). trap_mcause -> which exception,
+         * trap_mepc -> faulting instruction address, trap_mtval -> bad addr. */
+        trap_mcause = mcause_val;
+        trap_mepc   = read_csr(mepc);
+        trap_mtval  = read_csr(mtval);
         // handle exception
         switch (mcause_val & TRAP_CAUSE_EXCEPT_MASK) {
             case TRAP_CAUSE_EXC_FETCH_ALIGN: break;

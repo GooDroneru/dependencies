@@ -48,13 +48,16 @@ target_compile_options(K1921VG5T INTERFACE
     -fno-builtin
     -fno-common
     -Wno-aggressive-loop-optimizations
+    # Match the flags used by NIIET's own working K1921VG5T/VG7T builds
+    # (SCR4 core): strict volatile bitfield access (the plib5t register API is
+    # all volatile bitfields) and no strict aliasing (rxBuffer/payLoadBuffer
+    # punning in the bootloader).
+    -fstrict-volatile-bitfields
+    -fno-strict-aliasing
     $<$<CONFIG:Release>:-Os>
-    # -Og code plus data overruns the 4KB bootloader region by ~70B. Keeping
-    # -Og, share prologues/epilogues via libgcc (save/restore) and drop
-    # function/jump/loop alignment padding to shrink code.
-    $<$<CONFIG:Debug>:-falign-functions=1>
-    $<$<CONFIG:Debug>:-falign-jumps=1>
-    $<$<CONFIG:Debug>:-falign-loops=1>
+    # NOTE: the 4KB bootloader size limit (firmware/vg5t/esc.ld ASSERT) is
+    # temporarily disabled, so the previous Debug-only -falign-functions/jumps/
+    # loops=1 code-shrinking hack is no longer needed.
     -flto
     # C++ runtime overhead reduction
     $<$<COMPILE_LANGUAGE:CXX>:
@@ -73,10 +76,9 @@ target_link_options(K1921VG5T INTERFACE
     # --gc-sections cannot drop unreferenced functions (LTRANS emits one .text).
     -ffunction-sections
     -fdata-sections
-    # Must match the compile option: LTO codegen happens here.
-    $<$<CONFIG:Debug>:-falign-functions=1>
-    $<$<CONFIG:Debug>:-falign-jumps=1>
-    $<$<CONFIG:Debug>:-falign-loops=1>
+    # Must match the compile options: LTO codegen happens here.
+    -fstrict-volatile-bitfields
+    -fno-strict-aliasing
     -Wl,--gc-sections
     -Wl,--print-memory-usage
     -nostartfiles

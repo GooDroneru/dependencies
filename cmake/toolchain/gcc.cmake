@@ -26,22 +26,13 @@ set(TOOLCHAIN_INC_PATH "${TOOLCHAIN_DIR}/${CMAKE_LIBRARY_ARCHITECTURE}/include")
 set(TOOLCHAIN_LIB_PATH "${TOOLCHAIN_DIR}/${CMAKE_LIBRARY_ARCHITECTURE}/lib")
 set(TOOLCHAIN_SYSROOT  "${TOOLCHAIN_DIR}/${CMAKE_LIBRARY_ARCHITECTURE}")
 
-# Wine mode: use wrapper scripts from RISCV_WRAPPER_DIR
-# Otherwise use native binaries with correct extension
-if(DEFINED RISCV_WRAPPER_DIR AND EXISTS "${RISCV_WRAPPER_DIR}/${TOOLCHAIN_PREFIX}gcc")
-    set(_BIN_PATH "${RISCV_WRAPPER_DIR}")
-    set(TOOLCHAIN_EXT "")
-    message(STATUS "Wine mode: using wrappers from ${RISCV_WRAPPER_DIR}")
+# Native binaries only: `.exe` on Windows, no extension on Linux.
+# (No Wine wrappers: the Linux toolchains are used natively in the container.)
+set(_BIN_PATH "${TOOLCHAIN_BIN_PATH}")
+if(WIN32)
+    set(TOOLCHAIN_EXT ".exe")
 else()
-    set(_BIN_PATH "${TOOLCHAIN_BIN_PATH}")
-    if(WIN32)
-        set(TOOLCHAIN_EXT ".exe")
-    elseif(EXISTS "${TOOLCHAIN_BIN_PATH}/${TOOLCHAIN_PREFIX}gcc.exe" AND
-           NOT EXISTS "${TOOLCHAIN_BIN_PATH}/${TOOLCHAIN_PREFIX}gcc")
-        set(TOOLCHAIN_EXT ".exe")
-    else()
-        set(TOOLCHAIN_EXT "")
-    endif()
+    set(TOOLCHAIN_EXT "")
 endif()
 
 set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
