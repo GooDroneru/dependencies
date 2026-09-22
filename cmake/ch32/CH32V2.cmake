@@ -1,4 +1,4 @@
-include(${CMAKE_CURRENT_LIST_DIR}/../toolchain/riscv-none-embed.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/../toolchain/wch-none-embed.cmake)
 
 set(MCU_ARCH rv32imac)
 set(MCU_INTEGER_ABI ilp32)
