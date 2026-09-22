@@ -100,7 +100,20 @@ void ClkInit()
 //select system clock
 #ifdef SYSCLK_PLL
 	//PLLCLK = REFCLK * (FBDIV+FRAC/2^24) / (REFDIV*(1+PD0A)*(1+PD0B))
-	
+
+	/* Cold boot: the HSE crystal needs time to start. Wait for CLKGOOD1 before
+	 * using HSE / configuring the PLL. Without this the PLL and the flash
+	 * latency come up wrong on power-on and the bootloader fetches garbage
+	 * (illegal-instruction trap); a warm reset (crystal already running) works. */
+	{
+		volatile int _settle;
+		for (_settle = 0; _settle < 10000; ++_settle) { __asm__ volatile("nop"); }
+	}
+	timeout_counter = 0;
+	while (!(RCU->CLKSTAT & RCU_CLKSTAT_CLKGOOD1_Msk) && (timeout_counter < 1000000)) {
+		timeout_counter++;
+	}
+
 	//select HSE as source system clock while config PLL
 	RCU->SYSCLKCFG = (RCU_SYSCLKCFG_SRC_HSECLK << RCU_SYSCLKCFG_SRC_Pos);
     // Wait switching done
@@ -225,6 +238,13 @@ void ClkInit()
     timeout_counter = 0;
     while ((RCU->CLKSTAT_bit.SRC != RCU->SYSCLKCFG_bit.SRC) && (timeout_counter < 100)) //SYSCLK_SWITCH_TIMEOUT))
         timeout_counter++;
+    /* Cold boot: wait for the PLL output to stabilise (CLKGOOD2) before running
+     * from flash at the new clock / latency. */
+    if (sysclk_source == RCU_SYSCLKCFG_SRC_PLLCLK) {
+        timeout_counter = 0;
+        while (!(RCU->CLKSTAT & RCU_CLKSTAT_CLKGOOD2_Msk) && (timeout_counter < 1000000))
+            timeout_counter++;
+    }
 /*    if (timeout_counter == SYSCLK_SWITCH_TIMEOUT) //SYSCLK failed to switch
         while (1) {
         };*/
