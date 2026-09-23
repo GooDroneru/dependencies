@@ -5,6 +5,7 @@ set(CMAKE_SYSTEM_PROCESSOR rv32imac)
 # Try PATH first (compiler in /usr/local/bin from devcontainer)
 find_program(_PATH_GCC NAMES
     riscv-none-embed-gcc
+    riscv-wch-elf-gcc
     riscv64-unknown-elf-gcc
     riscv-none-elf-gcc
     riscv32-unknown-elf-gcc
